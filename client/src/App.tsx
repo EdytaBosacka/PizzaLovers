@@ -5,12 +5,15 @@ import RegisterForm from './components/RegisterForm';
 import logo from './pizza-lovers-logo.png';
 import loginImage from './login-image.png';
 import './App.css';
+import { createStore, StateMachineProvider } from 'little-state-machine';
 
 function App() {
+
+  createStore({});
   const [loginState, setLoginState] = useState(0);
   const login = (loginData: { login: string, password: string }) => {
     Axios.post('http://localhost:3001/login/', {
-      userName: loginData.login,
+      login: loginData.login,
       password: loginData.password
     }).then((response) =>{
       setLoginState(response.status);
@@ -22,6 +25,7 @@ function App() {
     });
   }
   return (
+    <StateMachineProvider>
     <div className="App">
       <header className="App-header">
         <img className="Logo" src={logo} alt="Logo" />
@@ -46,6 +50,7 @@ function App() {
         </div>
       </body>
     </div>
+    </StateMachineProvider>
   );
 }
 
