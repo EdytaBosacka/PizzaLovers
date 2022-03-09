@@ -77,6 +77,14 @@ h3 {
   font-family: 'Century Gothic';
 
 }
+
+input[type=password] {
+  border-width: 1px;
+  border-radius: 2px;
+  border-style: inset;
+  background-color: -internal-light-dark(rgb(255, 255, 255), rgb(59, 59, 59));
+  border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

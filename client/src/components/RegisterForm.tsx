@@ -1,10 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { createStore, useStateMachine, StateMachineProvider, GlobalState, } from 'little-state-machine';
+import { DatePicker } from "antd";
+import moment from 'moment';
 
 function RegisterForm({ login }: { login: (loginData: { login: string, password: string }) => void }) { 
     //const [loginData, setLoginData] = useState({ login: "", password: "" });
-    const { register, formState: { errors, isValid }, watch, getValues } = useForm({ mode: "onBlur" });
+    const { register, formState: { errors, isValid }, watch, getValues, control } = useForm({ mode: "onBlur" });
 
     const password = useRef({});
     password.current = watch("password", "");
@@ -22,6 +24,11 @@ function RegisterForm({ login }: { login: (loginData: { login: string, password:
         actions.updateFormDetails(getValues());
         setFormStep(curr => curr + 1);
     }
+    const backStep = () => {
+        setFormStep(curr => curr - 1);
+    }
+
+    const dateFormat = 'YYYY/MM/DD';
     
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -66,11 +73,37 @@ function RegisterForm({ login }: { login: (loginData: { login: string, password:
                 }
                 {formStep === 1 &&
                     <div>
-                        <div className="password">
-                            <label htmlFor="password"> Password </label>
-                            <input type="password" name="password" id="passwordId"/>
+                         <div className="name">
+                            <label htmlFor="name"> Name </label>
+                            <input
+                                {...register("name", { required: true, pattern: /^[A-Za-z]+$/i })}
+                            />
+                            {errors?.name?.type === "required" && <p className="errorMessage">Name is required.</p>}
+                            {errors?.name?.type === "pattern" && <p className="errorMessage">Name contains invalid characters.</p>}
                         </div>
-                        <input type="submit" value="Login" />
+                        <div className="dateOfBirth">
+                            <label htmlFor="dateOfBirth"> Date of birth </label>
+                            <Controller
+                                control = {control}
+                                name="dateOfBirth"
+                                render={({ field: { onChange, onBlur, value, ref } }) => (
+                                    <DatePicker format={dateFormat}
+                                      onChange={(date, dateString) => {onChange(dateString)}} // send value to hook form
+                                      onBlur={onBlur}
+                                    />
+                                  )}
+                                
+                            />
+                            
+                        </div>
+
+                        <button onClick={backStep} type="button"> Back </button>
+                        <input type="submit" value="Create account" />
+                    </div>
+                }
+                {formStep === 2 &&
+                    <div>
+                         <p> Udalo sie</p>
                     </div>
                 }
               <pre>{JSON.stringify(state)}</pre>

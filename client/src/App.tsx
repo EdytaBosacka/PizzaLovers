@@ -5,6 +5,7 @@ import RegisterForm from './components/RegisterForm';
 import logo from './pizza-lovers-logo.png';
 import loginImage from './login-image.png';
 import './App.css';
+import 'antd/dist/antd.css';
 import { createStore, StateMachineProvider } from 'little-state-machine';
 
 function App() {
