@@ -12,6 +12,7 @@ function App() {
 
   createStore({});
   const [loginState, setLoginState] = useState(0);
+  const [registerState, setRegisterState] = useState(0);
   const login = (loginData: { login: string, password: string }) => {
     Axios.post('http://localhost:3001/login/', {
       login: loginData.login,
@@ -25,6 +26,29 @@ function App() {
       }
     });
   }
+
+  const registerForm = (registerData: {[x:string]: any}) => {
+    Axios.post('http://localhost:3001/register/', {
+      login: registerData.login,
+      password: registerData.password,
+      name: registerData.name,
+      dateOfBirth: registerData.dateOfBirth,
+      gender: registerData.gender,
+      localication: registerData.localization
+    }).then((response) =>{
+      setRegisterState(response.status);
+      console.log(response);
+    }).catch(function(error){
+      if (error.response) {
+        setRegisterState(error.response.status);
+      }
+    });
+
+  } 
+
+  const createAnotherUser = () => {
+    setRegisterState(0);
+}
   return (
     <StateMachineProvider>
     <div className="App">
@@ -45,7 +69,10 @@ function App() {
           </div>
           <div className= "SidePanel">
             <h2> Register </h2>
-            <RegisterForm login={login}/>
+            <RegisterForm registerForm={registerForm} registerState = {registerState}/>
+            {registerState === 200 &&
+            <button onClick={createAnotherUser} type="button"> Create another user </button>
+            }
 
           </div>
         </div>

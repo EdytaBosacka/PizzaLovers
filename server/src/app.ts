@@ -27,7 +27,7 @@ app.post('/register', (req, res) => {
     res.status(409).send('Login already exists.');
   } else {
     registeredUsers.push({ login: username, password: password });
-    userInfo[username] = { name: req.body.name, dateOfBirth: req.body.dateOfBirth, sex: req.body.sex, localization: req.body.localization };
+    userInfo[username] = { name: req.body.name, dateOfBirth: req.body.dateOfBirth, gender: req.body.gender, localization: req.body.localization };
     res.status(200).send('Registration successful');
   }
 });
