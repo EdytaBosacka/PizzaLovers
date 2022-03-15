@@ -33,7 +33,7 @@ function App() {
       password: registerData.password,
       name: registerData.name,
       dateOfBirth: registerData.dateOfBirth,
-      gender: registerData.gender,
+      gender: registerData.gender.value,
       localication: registerData.localization
     }).then((response) =>{
       setRegisterState(response.status);
@@ -73,6 +73,9 @@ function App() {
             {registerState === 200 &&
             <button onClick={createAnotherUser} type="button"> Create another user </button>
             }
+            <div className= "LoginMessage">
+              {registerState === 409 && <h3> Username already exists.</h3>} 
+            </div>
 
           </div>
         </div>

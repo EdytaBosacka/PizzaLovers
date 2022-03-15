@@ -82,18 +82,32 @@ h3 {
 label {
   font-size: 18px;
 }
-input[type=password] {
+
+input {
   margin-bottom: 5px;
   border-width: 1px;
   border-radius: 2px;
   border: 1px solid darkgrey;
   height: 35px;
 }
+input:not([type="submit"]):hover, .react-dropdown .react-select__control:hover   {
+  border-color: #40a9ff;
+  border-right-width: 1px;
+}
+
+input:not([type="submit"]):focus, .react-dropdown .react-select__control--is-focused  {
+  border-color: #40a9ff;
+  box-shadow: 0 0 0 2px rgb(24 144 255 / 20%);
+  border-right-width: 1px;
+  outline: 0;
+}
 
 .react-dropdown {
   width: 200px;
   display: inline-block;
 }
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

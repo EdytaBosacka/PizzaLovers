@@ -3,6 +3,8 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { createStore, useStateMachine, StateMachineProvider, GlobalState, } from 'little-state-machine';
 import { DatePicker } from "antd";
 import Select from 'react-select';
+import moment from 'moment';
+import { isFunctionOrConstructorTypeNode } from 'typescript';
 
 function RegisterForm({ registerForm, registerState }: { registerForm: (registerData: { [x:string]:any; }) => void, registerState: number}){
     //const [loginData, setLoginData] = useState({ login: "", password: "" });
@@ -43,7 +45,29 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
             reset();
         }
     });
-    const submit = handleSubmit(data => registerForm(data));
+    const submit = handleSubmit(data => {
+        if(formStep===0)
+        {
+            actions.updateFormDetails(getValues());
+            setFormStep(1);
+        }
+        else
+        {
+            registerForm(data);
+        }
+    });
+
+    const customStyles = {
+        control: (provided:any, state:any) => ({
+            ...provided,
+            borderColor: state.isSelected ? 'pink' : 'black',
+            '&:hover': {
+                borderColor: 'red',
+              }
+          })
+    }
+
+ 
 
     return (
         <form onSubmit={submit}>
@@ -77,8 +101,9 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                         />
                         {errors?.confirmedPassword?.type === "validate" && <p className="errorMessage">The passwords do not match</p>}
                     </div>
-                    <button disabled={!isValid} onClick={nextStep} type="button"> Next </button>
+                   {/* <button onClick={nextStep} type="button"> Next </button> */}
 
+                   <input type="submit" value="Next" />
                 </div>
             }
             {formStep === 1 &&
@@ -97,13 +122,16 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                             control={control}
                             name="dateOfBirth"
                             render={({ field: { onChange, onBlur, value, ref } }) => (
-                                <DatePicker format={dateFormat}
+                                <DatePicker
+                                    defaultValue= {getValues("dateOfBirth")?moment(getValues("dateOfBirth"), dateFormat) : undefined}
+                                    format={dateFormat}
                                     onChange={(date, dateString) => { onChange(dateString) }} // send value to hook form
                                     onBlur={onBlur}
                                 />
                             )}
-
+                            rules={{required:true}}
                         />
+                        {errors?.dateOfBirth?.type === "required" && <p className="errorMessage">Date of birth is required.</p>}
                     </div>
                     <div className="gender">
                         <label htmlFor="gender"> Gender </label>
@@ -112,22 +140,26 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                             control={control}
                             render={({ field: {onChange}}) => (
                                 <Select
-                                    components = {{IndicatorSeparator:() => null}}
-                                    onChange={(genderOptions) => { onChange(genderOptions?.value) }}
+                                    components= {{IndicatorSeparator:() => null}}
+                                    onChange={(genderOptions) => { onChange(genderOptions) }}
                                     className="react-dropdown"
+                                    classNamePrefix="react-select"
                                     isSearchable={false}
                                     options={genderOptions}
+                                    defaultValue={getValues("gender")}
                                 />
                             )}
+                            rules={{required:true}}
                         />
+                        {errors?.gender?.type === "required" && <p className="errorMessage">Gender is required.</p>}
                     </div>
                     <div className="localization">
                         <label htmlFor="localization"> Localization </label>
                         <input
                             {...register("localization", { required: true, pattern: /^[A-Za-z]+$/i })}
                         />
-                        {errors?.localization?.type === "required" && <p className="errorMessage">Name is required.</p>}
-                        {errors?.localization?.type === "pattern" && <p className="errorMessage">Name contains invalid characters.</p>}
+                        {errors?.localization?.type === "required" && <p className="errorMessage">Localization is required.</p>}
+                        {errors?.localization?.type === "pattern" && <p className="errorMessage">Localization contains invalid characters.</p>}
                     </div>
 
                     <button onClick={backStep} type="button"> Back </button>
