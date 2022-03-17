@@ -107,6 +107,9 @@ input:not([type="submit"]):focus, .react-dropdown .react-select__control--is-foc
   display: inline-block;
 }
 
+.RFS-StepButton {
+  pointer-events: none;
+}
 
 @keyframes App-logo-spin {
   from {

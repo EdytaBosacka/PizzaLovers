@@ -4,7 +4,7 @@ import { createStore, useStateMachine, StateMachineProvider, GlobalState, } from
 import { DatePicker } from "antd";
 import Select from 'react-select';
 import moment from 'moment';
-import { isFunctionOrConstructorTypeNode } from 'typescript';
+import { Stepper } from 'react-form-stepper';
 
 function RegisterForm({ registerForm, registerState }: { registerForm: (registerData: { [x:string]:any; }) => void, registerState: number}){
     //const [loginData, setLoginData] = useState({ login: "", password: "" });
@@ -57,19 +57,38 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
         }
     });
 
-    const customStyles = {
-        control: (provided:any, state:any) => ({
-            ...provided,
-            borderColor: state.isSelected ? 'pink' : 'black',
-            '&:hover': {
-                borderColor: 'red',
-              }
-          })
+    const StepStyleDTO = {
+        activeBgColor: "rgb(24 144 255 / 20%)",
+        activeTextColor: '#40a9ff',
+        completedBgColor: "rgb(24 144 255 / 20%)",
+        completedTextColor:'#40a9ff' ,
+        inactiveBgColor:'#e0e0e0'  ,
+        inactiveTextColor: '#40a9ff',
+        size: '2em' ,
+        circleFontSize: '14px',
+        labelFontSize: '14px',
+        borderRadius: '60%' ,
+        fontWeight: 10
+    }
+
+    const 	ConnectorStyleProps = {
+        disabledColor: "#bdbdbd" ,
+        activeColor: "#40a9ff",
+        completedColor: "rgb(24 144 255 / 20%)",
+        size: 1,
+        stepSize: '2em',
+        style: 'solid'
+
     }
 
  
 
     return (
+        <div>
+            <Stepper
+                steps={[{ label: 'Step 1' }, { label: 'Step 2' }, { label: 'Step 3' }]} connectorStateColors={true} 
+                activeStep={formStep} styleConfig={StepStyleDTO} connectorStyleConfig={	ConnectorStyleProps}
+            />
         <form onSubmit={submit}>
             {formStep === 0 &&
                 <div>
@@ -175,6 +194,7 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
             }
             <pre>{JSON.stringify(state)}</pre>
         </form>
+        </div>
     )
 }
 
