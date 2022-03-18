@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Axios from 'axios';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
-import logo from './pizza-lovers-logo.png';
+import logo from './20.png';
 import loginImage from './login-image.png';
 import './App.css';
 import 'antd/dist/antd.css';

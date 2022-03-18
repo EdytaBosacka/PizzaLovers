@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: white;
+  background-color: #ffac45;
   min-height: 20vh;
   display: flex;
   flex-direction: column;
@@ -47,7 +47,7 @@
 
 .Logo {
   margin-top: 20px;
-  height: 120px;
+  height: 80px;
 }
 
 .LoginMessage {

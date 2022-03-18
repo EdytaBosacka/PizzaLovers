@@ -58,12 +58,12 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
     });
 
     const StepStyleDTO = {
-        activeBgColor: "rgb(24 144 255 / 20%)",
-        activeTextColor: '#40a9ff',
-        completedBgColor: "rgb(24 144 255 / 20%)",
-        completedTextColor:'#40a9ff' ,
+        activeBgColor: "rgb(255 172 69)",
+        activeTextColor: "#ffffff",
+        completedBgColor: "rgb(255 172 69)",
+        completedTextColor: "#ffffff" ,
         inactiveBgColor:'#e0e0e0'  ,
-        inactiveTextColor: '#40a9ff',
+        inactiveTextColor: "#ffffff",
         size: '2em' ,
         circleFontSize: '14px',
         labelFontSize: '14px',
@@ -73,8 +73,8 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
 
     const 	ConnectorStyleProps = {
         disabledColor: "#bdbdbd" ,
-        activeColor: "#40a9ff",
-        completedColor: "rgb(24 144 255 / 20%)",
+        activeColor: "rgb(255 172 69)",
+        completedColor: "rgb(255 172 69)",
         size: 1,
         stepSize: '2em',
         style: 'solid'
