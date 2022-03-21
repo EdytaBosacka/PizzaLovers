@@ -7,7 +7,7 @@ import moment from 'moment';
 import { Stepper } from 'react-form-stepper';
 
 function RegisterForm({ registerForm, registerState }: { registerForm: (registerData: { [x:string]:any; }) => void, registerState: number}){
-    //const [loginData, setLoginData] = useState({ login: "", password: "" });
+
     const { register, handleSubmit, formState: { errors, isValid }, watch, getValues, control, reset } = useForm({ mode: "onBlur" });
     const password = useRef({});
     password.current = watch("password", "");
@@ -21,11 +21,6 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
     const { actions, state } = useStateMachine({ updateFormDetails });
     const [formStep, setFormStep] = useState(0);
 
-    // functions called by button's onClick
-    const nextStep = () => {
-        actions.updateFormDetails(getValues());
-        setFormStep(curr => curr + 1);
-    }
     const backStep = () => {
         setFormStep(curr => curr - 1);
     }
@@ -57,6 +52,7 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
         }
     });
 
+    // styles for stepper
     const StepStyleDTO = {
         activeBgColor: "rgb(255 172 69)",
         activeTextColor: "#ffffff",
@@ -70,7 +66,6 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
         borderRadius: '60%' ,
         fontWeight: 10
     }
-
     const 	ConnectorStyleProps = {
         disabledColor: "#bdbdbd" ,
         activeColor: "rgb(255 172 69)",
@@ -120,7 +115,6 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                         />
                         {errors?.confirmedPassword?.type === "validate" && <p className="errorMessage">The passwords do not match</p>}
                     </div>
-                   {/* <button onClick={nextStep} type="button"> Next </button> */}
 
                    <input type="submit" value="Next" />
                 </div>
