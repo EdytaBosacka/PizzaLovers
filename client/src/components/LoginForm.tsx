@@ -4,7 +4,6 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 function LoginForm({ login }: { login: (loginData: { [x:string]: any}) => void }) {
     const { register, handleSubmit, formState: { errors, isValid }, watch, getValues, control, reset } = useForm({ mode: "onBlur" });
 
-
     const submit = handleSubmit(data => {
         login(data);  
     });

@@ -1,7 +1,8 @@
+import SideBar from '../components/SideBar';
 
 function MainPage() {
     return(
-    <h1>Test</h1>
+        <SideBar/>
     );
 }
 
