@@ -11,24 +11,6 @@
     background: #ffac45;
     
 }
-#sidebar-wrapper{
-    min-height: 100vh !important;
-    width: 100vw;
-    margin-left: -1rem;
-    -webkit-transition: margin .25s ease-out;
-    -moz-transition: margin .25s ease-out;
-    -o-transition: margin .25s ease-out;
-    transition: margin .25s ease-out;
-}
-#sidebar-wrapper .sidebar-heading {
-    padding: 0.875rem 1.25rem;
-    font-size: 1.2rem;
-}
-
-#page-content-wrapper {
-    min-width: 0;
-    width: 100%;
-}
 
 .SideLogo {
     margin-top: 10px;
@@ -42,6 +24,22 @@
     justify-content: center;
     align-items: center;
 }
+.sideBarItemContainer:hover {
+    border-radius: 5px 5px 5px 5px;
+    background:rgba(255, 255, 255, 0.2);
+    
+}
+
+.sideBarItemContainer:hover .sideBarItem {
+    color: #c6531e;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.1);
+}
+.sideBarItemContainer:hover .bi {
+    color: #c6531e;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+
 .sideBarItem {
     color: white;
     font-family: 'Century Gothic';
@@ -58,3 +56,4 @@
     text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
 
 }
+

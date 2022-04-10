@@ -1,0 +1,16 @@
+.MainPage {
+    background: rgba(255, 172, 69, 0.1);
+    height: 100vh;
+    margin-left: 210px;
+    display: flex;
+    justify-content: center;
+}
+
+.usersSwiper {
+    height: 95vh;
+    width: 80vw;
+    background: white;
+    margin: 15px 15px 15px 15px;
+    border-radius: 20px 20px 20px 20px;
+    box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);
+}

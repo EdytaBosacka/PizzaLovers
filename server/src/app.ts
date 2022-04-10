@@ -1,11 +1,22 @@
-import express from 'express';
+import express, { response } from 'express';
 import cors from 'cors';
 import { addSyntheticLeadingComment } from 'typescript';
 
+const fs = require('fs');
 const app = express();
 const port = 3001;
-const registeredUsers = [{ login: 'admin', password: 'admin' }];
-const userInfo = {};
+var registeredUsers = [{ login: 'admin', password: 'admin' }];
+var userInfo = {};
+const registeredUsersFileName = './src/resources/registeredUsers.json';
+const usersDetailsFileName = './src/resources/usersDetails.json';
+
+try {
+  registeredUsers = JSON.parse(fs.readFileSync(registeredUsersFileName, 'utf8'));
+  userInfo = JSON.parse(fs.readFileSync(usersDetailsFileName, 'utf8'));
+} catch (err) {
+  console.error(err)
+}
+
 
 app.use(express.json());
 app.use(cors());
@@ -27,10 +38,34 @@ app.post('/register', (req, res) => {
     res.status(409).send('Login already exists.');
   } else {
     registeredUsers.push({ login: username, password: password });
+    try {
+      fs.writeFileSync(registeredUsersFileName, JSON.stringify(registeredUsers));
+    } catch (err) {
+      console.log(err);
+    }
+
     userInfo[username] = { name: req.body.name, dateOfBirth: req.body.dateOfBirth, gender: req.body.gender, localization: req.body.localization };
+    try {
+      fs.writeFileSync(usersDetailsFileName, JSON.stringify(userInfo));
+    } catch (err) {
+      console.log(err);
+    }
     res.status(200).send('Registration successful');
   }
 });
+
+app.post('/getUsers', (req,res) => {
+  var userInfoArray = Object.entries(userInfo);
+  userInfoArray = userInfoArray.filter((key) => {
+    key != req.body.loggedUser;
+  })
+  var userInfoFiltered = Object.fromEntries(userInfoArray);
+
+  res.status(200).send(userInfoFiltered);
+
+
+});
+
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
