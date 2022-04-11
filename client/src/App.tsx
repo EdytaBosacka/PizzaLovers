@@ -6,14 +6,27 @@ import SettingsPage from "./pages/SettingsPage";
 import ChatPage from "./pages/ChatPage";
 import './App.css';
 import 'antd/dist/antd.css';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
 function App() {
 
   createStore({});
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main:  '#e9692c',
+      },
+      secondary: {
+        main: '#11cb5f',
+      },
+    },
+  });
  
   return (
     <StateMachineProvider>
+    <ThemeProvider theme={theme}>
     <div className="App">
       <Router>
         <Switch>
@@ -25,6 +38,7 @@ function App() {
       
       </Router>
     </div>
+    </ThemeProvider>
     </StateMachineProvider>
   );
 }

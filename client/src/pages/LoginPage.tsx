@@ -5,6 +5,7 @@ import RegisterForm from '../components/RegisterForm';
 import Header from '../header.png';
 import { useHistory } from "react-router-dom";
 import loginImage from '../login-image.png';
+import Button from '../../node_modules/@mui/material/Button';
 
 function LoginPage() {
   let history = useHistory();
@@ -74,7 +75,7 @@ function LoginPage() {
           <h2> Register </h2>
           <RegisterForm registerForm={registerForm} registerState={registerState} />
           {registerState === 200 &&
-            <button onClick={createAnotherUser} type="button"> Create another user </button>
+            <Button variant="outlined" onClick={createAnotherUser}> Create another user </Button>
           }
           <div className="LoginMessage">
             {registerState === 409 && <h3> Username already exists.</h3>}
@@ -90,10 +91,7 @@ function LoginPage() {
         <div className="bubble"></div>
         <div className="bubble"></div>
         <div className="bubble"></div>
-
-        
-
-
+        <div className="bubble"></div>
       </div>
 
     </div>

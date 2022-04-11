@@ -1,5 +1,6 @@
 .MainPage {
-    background: rgba(255, 172, 69, 0.1);
+    
+    background-color: lightgoldenrodyellow;
     height: 100vh;
     margin-left: 210px;
     display: flex;

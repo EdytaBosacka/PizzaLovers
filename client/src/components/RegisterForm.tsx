@@ -5,6 +5,7 @@ import { DatePicker } from "antd";
 import Select from 'react-select';
 import moment from 'moment';
 import { Stepper } from 'react-form-stepper';
+import Button from '../../node_modules/@mui/material/Button';
 
 function RegisterForm({ registerForm, registerState }: { registerForm: (registerData: { [x:string]:any; }) => void, registerState: number}){
 
@@ -116,7 +117,7 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                         {errors?.confirmedPassword?.type === "validate" && <p className="errorMessage">The passwords do not match</p>}
                     </div>
 
-                   <input type="submit" value="Next" />
+                   <Button variant="outlined" type="submit">Next</Button>
                 </div>
             }
             {formStep === 1 &&
@@ -175,8 +176,8 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                         {errors?.localization?.type === "pattern" && <p className="errorMessage">Localization contains invalid characters.</p>}
                     </div>
 
-                    <button onClick={backStep} type="button"> Back </button>
-                    <input type="submit" value="Create account" />
+                    <Button variant="outlined" onClick={backStep}> Back </Button>
+                    <Button variant="outlined" type="submit"> Create account </Button>
                 </div>
             }
             { formStep == 2  && 
