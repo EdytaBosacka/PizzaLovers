@@ -4,8 +4,18 @@ import { createStore, useStateMachine, StateMachineProvider, GlobalState, } from
 import { DatePicker } from "antd";
 import Select from 'react-select';
 import moment from 'moment';
-import { Stepper } from 'react-form-stepper';
+//import { Stepper } from 'react-form-stepper'
+import { styled } from '@mui/material/styles';
+import CheckIcon from '@mui/icons-material/Check';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Box from '@mui/material/Box';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
 import Button from '../../node_modules/@mui/material/Button';
+import { StepIconProps } from '@mui/material/StepIcon';
+import './RegisterForm.css';
 
 function RegisterForm({ registerForm, registerState }: { registerForm: (registerData: { [x:string]:any; }) => void, registerState: number}){
 
@@ -20,11 +30,13 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
         }
     }
     const { actions, state } = useStateMachine({ updateFormDetails });
-    const [formStep, setFormStep] = useState(0);
+    const [activeStep, setActiveStep] = useState(0);
 
     const backStep = () => {
-        setFormStep(curr => curr - 1);
+        setActiveStep(curr => curr - 1);
     }
+
+    const steps = ['Account Setup', 'User Details', 'Complete'];
 
     const dateFormat = 'YYYY/MM/DD';
     const genderOptions = [
@@ -35,17 +47,17 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
     
     useEffect(() => {
         if (registerState === 200){
-            setFormStep(2);
-        } else if(formStep ===2 && registerState === 0 ) {
-            setFormStep(0);
+            setActiveStep(2);
+        } else if(activeStep ===2 && registerState === 0 ) {
+            setActiveStep(0);
             reset();
         }
     });
     const submit = handleSubmit(data => {
-        if(formStep===0)
+        if(activeStep===0)
         {
             actions.updateFormDetails(getValues());
-            setFormStep(1);
+            setActiveStep(1);
         }
         else
         {
@@ -53,40 +65,84 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
         }
     });
 
-    // styles for stepper
-    const StepStyleDTO = {
-        activeBgColor: "rgb(255 172 69)",
-        activeTextColor: "#ffffff",
-        completedBgColor: "rgb(255 172 69)",
-        completedTextColor: "#ffffff" ,
-        inactiveBgColor:'#e0e0e0'  ,
-        inactiveTextColor: "#ffffff",
-        size: '2em' ,
-        circleFontSize: '14px',
-        labelFontSize: '14px',
-        borderRadius: '60%' ,
-        fontWeight: 10
-    }
-    const 	ConnectorStyleProps = {
-        disabledColor: "#bdbdbd" ,
-        activeColor: "rgb(255 172 69)",
-        completedColor: "rgb(255 172 69)",
-        size: 1,
-        stepSize: '2em',
-        style: 'solid'
+    // CSS style for Stepper
 
-    }
+    const StepIconRoot = styled('div')<{
+        ownerState: { completed?: boolean; active?: boolean };
+      }>(({ theme, ownerState }) => ({
+        backgroundColor: '#ccc',
+        zIndex: 1,
+        color: '#fff',
+        width: 30,
+        height: 30,
+        display: 'flex',
+        borderRadius: '50%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        ...(ownerState.active && {
+          backgroundImage:
+            'linear-gradient( 136deg, rgb(252, 126, 66) 0%, rgb(252, 193, 66) 20%, rgb(252, 126, 66) 100%)',
+          boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+        }),
+        ...(ownerState.completed && {
+          backgroundImage:
+            'linear-gradient( 136deg, rgb(252, 126, 66) 0%, rgb(252, 193, 66) 20%, rgb(252, 126, 66) 100%)',
+        }),
+      }));
+
+      function StepIcon(props: StepIconProps) {
+        const { active, completed, className } = props;
+
+        const icons: { [index: string]: React.ReactElement } = {
+            1: <LockOutlinedIcon />,
+            2: <PersonOutlineOutlinedIcon />,
+            3: <CheckIcon/>,
+          };
+      
+        return (
+          <StepIconRoot ownerState={{ completed, active }} className={className}>
+              {completed ? (
+                <CheckIcon/>
+                ) : (
+                    icons[String(props.icon)]
+                )}
+              
+          </StepIconRoot>
+        );
+      }
 
  
 
     return (
-        <div>
-            <Stepper
-                steps={[{ label: 'Step 1' }, { label: 'Step 2' }, { label: 'Step 3' }]} connectorStateColors={true} 
-                activeStep={formStep} styleConfig={StepStyleDTO} connectorStyleConfig={	ConnectorStyleProps}
-            />
+        <div className="registerForm">
+            <Box sx={{ marginLeft:'30px', marginRight:'30px' }}>
+            <Stepper activeStep={activeStep}>
+                {steps.map((label,index) => {
+                    const stepProps: {completed?: boolean} = {};
+                    return (
+                        <Step  key={label} {...stepProps}
+                        sx={{
+                            '& .MuiStepLabel-root .Mui-completed': {
+                                color: 'secondary.main',
+                            },
+                            '& .MuiStepLabel-root .Mui-active': {
+                                color: 'secondary.main',
+                            
+                            },
+                        }
+                        }
+                        >
+                            <StepLabel StepIconComponent={StepIcon}>{label}</StepLabel>
+                        </Step>
+    
+                    );
+                })}
+
+            </Stepper>
+            </Box>
+            
         <form onSubmit={submit}>
-            {formStep === 0 &&
+            {activeStep === 0 &&
                 <div>
                     <div className="login">
                         <label htmlFor="login"> Login </label>
@@ -120,7 +176,7 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                    <Button variant="outlined" type="submit">Next</Button>
                 </div>
             }
-            {formStep === 1 &&
+            {activeStep === 1 &&
                 <div>
                     <div className="name">
                         <label htmlFor="name"> Name </label>
@@ -180,7 +236,7 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                     <Button variant="outlined" type="submit"> Create account </Button>
                 </div>
             }
-            { formStep == 2  && 
+            {activeStep == 2  && 
                 <div>
                     <p> Udalo sie</p>
                     

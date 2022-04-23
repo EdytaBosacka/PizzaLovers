@@ -63,7 +63,7 @@ function LoginPage() {
 
       <div className="MainPanel">
         <div className="SidePanel">
-          <h2> Find PizzaLovers from your neighborhood </h2>
+          <h2 className="SidePanelTitle"> Find PizzaLovers from your neighborhood </h2>
           <LoginForm login={login} />
           <div className="LoginMessage">
             {loginState === 401 && <h3> Password or login is invalid.</h3>}
@@ -72,7 +72,7 @@ function LoginPage() {
 
         </div>
         <div className="SidePanel">
-          <h2> Register </h2>
+          <h2 className="SidePanelTitle"> Register </h2>
           <RegisterForm registerForm={registerForm} registerState={registerState} />
           {registerState === 200 &&
             <Button variant="outlined" onClick={createAnotherUser}> Create another user </Button>

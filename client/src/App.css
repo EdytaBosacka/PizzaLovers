@@ -1,8 +1,9 @@
 .App {
   text-align: center;
   background-color: #ffac45;
+  height:200%;
+  width:100%;
 }
-
 
 .App-header {
  
@@ -40,6 +41,10 @@
   
 }
 
+.SidePanelTitle {
+  margin-top: 20px;
+}
+
 
 .Logo {
   margin-top: 20px;
@@ -58,6 +63,7 @@
 
 .loginImage {
   margin: 0px;
+  padding: 0px;
 }
 
 h2 {
