@@ -1,3 +1,7 @@
 .registerForm{
     width:100%;
 }
+
+.registerButton {
+    margin-top: 25px;
+}

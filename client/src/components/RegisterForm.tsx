@@ -1,18 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { createStore, useStateMachine, StateMachineProvider, GlobalState, } from 'little-state-machine';
-import { DatePicker } from "antd";
+//import { DatePicker } from "antd";
 import Select from 'react-select';
 import moment from 'moment';
-//import { Stepper } from 'react-form-stepper'
-import { styled } from '@mui/material/styles';
+
 import CheckIcon from '@mui/icons-material/Check';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import { styled } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+
 import Button from '../../node_modules/@mui/material/Button';
 import { StepIconProps } from '@mui/material/StepIcon';
 import './RegisterForm.css';
@@ -115,7 +122,7 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
 
     return (
         <div className="registerForm">
-            <Box sx={{ marginLeft:'30px', marginRight:'30px' }}>
+            <Box sx={{ marginLeft:'30px', marginRight:'30px', marginTop: '10px', marginBottom: '20px' }}>
             <Stepper activeStep={activeStep}>
                 {steps.map((label,index) => {
                     const stepProps: {completed?: boolean} = {};
@@ -145,63 +152,61 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
             {activeStep === 0 &&
                 <div>
                     <div className="login">
-                        <label htmlFor="login"> Login </label>
-                        <input
-                            {...register("login", { required: true, maxLength: 20, pattern: /^[A-Za-z0-9]+$/i })}
-                        />
+                        <TextField style = {{width: 250}} 
+                            label="Login" margin="normal" size="small" autoComplete="off" {...register("login", { required: true, maxLength: 20, 
+                            pattern: /^[A-Za-z0-9]+$/i })} />
                         {errors?.login?.type === "required" && <p className="errorMessage">Login is required.</p>}
                         {errors?.login?.type === "maxLength" && <p className="errorMessage">Login cannot exceed 20 characters.</p>}
                         {errors?.login?.type === "pattern" && <p className="errorMessage">Login contains invalid characters.</p>}
-
                     </div>
 
                     <div className="password">
-                        <label htmlFor="password"> Password </label>
-                        <input type="password"
-                            {...register("password", { required: true, maxLength: 20, minLength: 7 })}
-                        />
+                        <TextField style = {{width: 250}} 
+                            label="Password" margin="normal" type="password" size="small" autoComplete="off" {...register("password", { required: true, maxLength: 20,
+                            minLength: 7 })} />
                         {errors?.password?.type === "required" && <p className="errorMessage">Password is required.</p>}
                         {errors?.password?.type === "maxLength" && <p className="errorMessage">Password cannot exceed 20 characters.</p>}
                         {errors?.password?.type === "minLength" && <p className="errorMessage">Password must have at least 7 characters.</p>}
                     </div>
 
                     <div className="confirmedPassword">
-                        <label htmlFor="confirmedPassword"> Confirm password </label>
-                        <input type="password"
-                            {...register("confirmedPassword", { required: true, validate: value => value === password.current })}
-                        />
+                        <TextField style = {{width: 250}} 
+                            label="Confirm password" margin="normal" type="password" size="small" autoComplete="off" {...register("confirmedPassword", { required: true, 
+                            validate: value => value === password.current })} />
                         {errors?.confirmedPassword?.type === "validate" && <p className="errorMessage">The passwords do not match</p>}
                     </div>
-
-                   <Button variant="outlined" type="submit">Next</Button>
+                    <div className="registerButton">
+                        <Button variant="outlined" type="submit">Next</Button>
+                   </div>
                 </div>
             }
             {activeStep === 1 &&
                 <div>
                     <div className="name">
-                        <label htmlFor="name"> Name </label>
-                        <input
-                            {...register("name", { required: true, pattern: /^[A-Za-z]+$/i })}
-                        />
+                        <TextField style = {{width: 250}} 
+                            label="Name" margin="normal" size="small" autoComplete="off" {...register("name", 
+                            { required: true, pattern: /^[A-Za-z]+$/i })} />
                         {errors?.name?.type === "required" && <p className="errorMessage">Name is required.</p>}
                         {errors?.name?.type === "pattern" && <p className="errorMessage">Name contains invalid characters.</p>}
                     </div>
                     <div className="dateOfBirth">
-                        <label htmlFor="dateOfBirth"> Date of birth </label>
                         <Controller
                             control={control}
                             name="dateOfBirth"
-                            render={({ field: { onChange, onBlur, value, ref } }) => (
-                                <DatePicker
-                                    defaultValue= {getValues("dateOfBirth")?moment(getValues("dateOfBirth"), dateFormat) : undefined}
-                                    format={dateFormat}
-                                    onChange={(date, dateString) => { onChange(dateString) }} // send value to hook form
-                                    onBlur={onBlur}
-                                />
-                            )}
-                            rules={{required:true}}
+                            render={({ field: { onChange } }) => (
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                            label="Date of birth"
+                            value={getValues("dateOfBirth")}
+                            openTo="year"
+                            onChange={(newValue) => {
+                            onChange(moment(newValue).format( dateFormat)); }}                       
+                            renderInput={(params) => <TextField {...params} />} 
                         />
-                        {errors?.dateOfBirth?.type === "required" && <p className="errorMessage">Date of birth is required.</p>}
+                        </LocalizationProvider>
+                          )}
+                        />
+                    
                     </div>
                     <div className="gender">
                         <label htmlFor="gender"> Gender </label>
