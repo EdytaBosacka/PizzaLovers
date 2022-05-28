@@ -7,7 +7,8 @@ import ChatPage from "./pages/ChatPage";
 import './App.css';
 import 'antd/dist/antd.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import type {} from '@mui/x-date-pickers/themeAugmentation';
+import { HowToVoteSharp } from "@mui/icons-material";
 
 function App() {
 
@@ -22,6 +23,40 @@ function App() {
         main: '#fc7e42',
       },
     },
+    components: {
+      MuiCalendarPicker: {
+        styleOverrides: {
+          root: {
+            height:'43vh',
+            
+          },
+          viewTransitionContainer: {
+            minHeight: '230px',
+            overflowY:'hidden'
+  
+          }
+          
+        },
+      },
+      MuiYearPicker: {
+        styleOverrides: {
+          root: {
+            overflowY:'auto',  
+            height:'35vh',
+            PrivatePickersYear: {
+              MuiSelected: {
+                focus: {backgroundcolor: "pink"}
+                
+              }
+            
+            }
+          },
+          
+        },
+      }
+
+    },
+    
   });
  
   return (
