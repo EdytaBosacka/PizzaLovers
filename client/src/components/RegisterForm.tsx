@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { createStore, useStateMachine, StateMachineProvider, GlobalState, } from 'little-state-machine';
 //import { DatePicker } from "antd";
-import Select from 'react-select';
+//import Select from 'react-select';
 import moment from 'moment';
 
 import CheckIcon from '@mui/icons-material/Check';
@@ -18,6 +18,10 @@ import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 import Button from '../../node_modules/@mui/material/Button';
 import { StepIconProps } from '@mui/material/StepIcon';
@@ -153,7 +157,7 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                                 label="Login" margin="normal" size="small" autoComplete="off" {...register("login", {
                                     required: true, maxLength: 20,
                                     pattern: /^[A-Za-z0-9]+$/i
-                                })} sx={{ width: '40%' }}/>
+                                })} sx={{ width: '40%' }} />
                             {errors?.login?.type === "required" && <p className="errorMessage">Login is required.</p>}
                             {errors?.login?.type === "maxLength" && <p className="errorMessage">Login cannot exceed 20 characters.</p>}
                             {errors?.login?.type === "pattern" && <p className="errorMessage">Login contains invalid characters.</p>}
@@ -178,8 +182,8 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                                 })} sx={{ width: '40%' }} />
                             {errors?.confirmedPassword?.type === "validate" && <p className="errorMessage">The passwords do not match</p>}
                         </div>
-                        <div className="registerButton">
-                            <Button variant="outlined" type="submit">Next</Button>
+                        <div className="buttonBar">
+                            <Button variant="outlined" type="submit" sx={{ width: '20%' }} >Next</Button>
                         </div>
                     </div>
                 }
@@ -216,23 +220,24 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                             />
                         </div>
                         <div className="gender">
-                            <label htmlFor="gender"> Gender </label>
-                            <Controller
-                                name="gender"
-                                control={control}
-                                render={({ field: { onChange } }) => (
-                                    <Select
-                                        components={{ IndicatorSeparator: () => null }}
-                                        onChange={(genderOptions) => { onChange(genderOptions) }}
-                                        className="react-dropdown"
-                                        classNamePrefix="react-select"
-                                        isSearchable={false}
-                                        options={genderOptions}
-                                        defaultValue={getValues("gender")}
-                                    />
-                                )}
-                                rules={{ required: true }}
-                            />
+                            <TextField
+                                className="react-dropdown"
+                                label="Gender"
+                                size="small"
+                                margin="normal"
+                                select
+                                defaultValue={getValues("gender") ? getValues("gender") : null}
+                                {...register("gender", { required: true })}
+                                sx={{ width: '40%' }}
+                            >
+                                {genderOptions?.map(genderOption => {
+                                    return (
+                                        <MenuItem key={genderOption.value} value={genderOption.value}>
+                                            {genderOption.label}
+                                        </MenuItem>
+                                    );
+                                })}
+                            </TextField>
                             {errors?.gender?.type === "required" && <p className="errorMessage">Gender is required.</p>}
                         </div>
                         <div className="localization">
@@ -242,16 +247,20 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                             {errors?.localization?.type === "required" && <p className="errorMessage">Localization is required.</p>}
                             {errors?.localization?.type === "pattern" && <p className="errorMessage">Localization contains invalid characters.</p>}
                         </div>
+                        <div className="buttonBar">
+                            <Button  variant="outlined" onClick={backStep} > Back </Button>
+                            <div className="createAccountButton">
+                                <Button  variant="outlined" type="submit"> Create account </Button>
+                            </div>
+                        </div>
 
-                        <Button variant="outlined" onClick={backStep}> Back </Button>
-                        <Button variant="outlined" type="submit"> Create account </Button>
                     </div>
                 }
                 {activeStep == 2 &&
                     <div className="SuccessMessage">
                         <h3> User was successfully created. </h3>
                     </div>
-                   
+
 
                 }
                 <pre>{JSON.stringify(state)}</pre>
