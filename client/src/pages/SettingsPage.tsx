@@ -1,7 +1,17 @@
+import SideBar from '../components/SideBar';
+import ImageDropzone from '../components/ImageDropzone';
+import './SettingsPage.css';
 
 function SettingsPage() {
-    return(
-        <h1>Settings</h1>
+
+    return (
+        <div className="MainPage">
+            <SideBar />
+            <div className="userSettings">
+                <ImageDropzone/>
+            </div>
+        </div>
+
     );
 }
 
