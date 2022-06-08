@@ -11,6 +11,10 @@
     font-size: 16px;
   }
 
+  .Highlight {
+    background-color: rgb(255,255,224);
+  }
+
   .FileInput {
     display: none;
   }
