@@ -12,7 +12,7 @@ function ImageDropzone(props: any) {
         fileInputRef.current?.click();
     }
 
-    const onImageFilesAdded = (e: Event) => {
+    const onImageFilesAdded = (e: React.ChangeEvent<HTMLDivElement>) => {
         const images = (e.target as HTMLInputElement).files;
         if (props.onImageFilesAdded) {
             const imageArray = Array.from(images || []);
@@ -42,9 +42,10 @@ function ImageDropzone(props: any) {
              onDragOver={onDragOver} 
              onDragLeave={onDragLeave}
              onDrop={onDrop}
+             style={{ cursor: 'pointer' }}
         >
             <AddPhotoAlternateOutlinedIcon sx={{ color: "rgb(187, 186, 186)", fontSize: "48px", opacity: "0.7" }} />
-            <input ref={fileInputRef} className="FileInput" type="file" />
+            <input ref={fileInputRef} className="FileInput" type="file" accept="image/*" onChange={ onImageFilesAdded } />
         </div>
 
     )

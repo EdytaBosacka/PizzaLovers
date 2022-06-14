@@ -1,14 +1,27 @@
 import SideBar from '../components/SideBar';
-import ImageDropzone from '../components/ImageDropzone';
+import ImageUpload from '../components/ImageUpload';
 import './SettingsPage.css';
+import { useLocation } from 'react-router-dom';
+import  Axios from 'axios';
+
 
 function SettingsPage() {
+
+    const location = useLocation<{ login: string }>();
+    const uploadImages = (images: (String|ArrayBuffer)[]) => {
+        Axios.post('http://localhost:3001/uploadImages/', {
+          loggedUser: location.state.login
+        }).then((response) =>{
+        }).catch(function(error){
+          
+        });
+      }
 
     return (
         <div className="MainPage">
             <SideBar />
             <div className="userSettings">
-                <ImageDropzone/>
+                <ImageUpload uploadImages={uploadImages}/>
             </div>
         </div>
 

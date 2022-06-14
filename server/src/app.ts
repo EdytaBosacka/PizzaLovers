@@ -7,12 +7,15 @@ const app = express();
 const port = 3001;
 var registeredUsers = [{ login: 'admin', password: 'admin' }];
 var userInfo = {};
+var userImages = {};
 const registeredUsersFileName = './src/resources/registeredUsers.json';
 const usersDetailsFileName = './src/resources/usersDetails.json';
+const usersImagesFileName = './src/resources/usersImages.json';
 
 try {
   registeredUsers = JSON.parse(fs.readFileSync(registeredUsersFileName, 'utf8'));
   userInfo = JSON.parse(fs.readFileSync(usersDetailsFileName, 'utf8'));
+  userImages = JSON.parse(fs.readFileSync(usersImagesFileName,'utf8'));
 } catch (err) {
   console.error(err)
 }
@@ -63,6 +66,18 @@ app.post('/getUsers', (req,res) => {
 
   res.status(200).send(userInfoFiltered);
 
+});
+
+app.post('/uploadImages', (req,res) => {
+  const loggedUser = req.body.loggedUser;
+  userImages[loggedUser] = req.body.images;
+  try {
+    fs.writeFileSync(usersImagesFileName, JSON.stringify(userImages));
+  } catch (err) {
+    console.log(err);
+  }
+  res.status(200).send('Upload Images successful');
+  
 
 });
 

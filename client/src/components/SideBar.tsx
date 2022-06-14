@@ -22,7 +22,6 @@ function SideBar() {
                 <Nav.Link className="sideBarItem" href="/settings">Settings </Nav.Link>
             </Nav.Item>
            
-
         </Nav>
         </div>
         
