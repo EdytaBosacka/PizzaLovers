@@ -9,8 +9,9 @@ import Button from '../../node_modules/@mui/material/Button';
 
 function LoginPage() {
   let history = useHistory();
-  const routeChange = (loggedUser: String) => {
+  const routeChange = (loggedUser: string) => {
     let path = '/home';
+    localStorage.setItem('login', loggedUser);
     history.push(path, { login: loggedUser });
   }
 

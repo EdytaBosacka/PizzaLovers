@@ -45,7 +45,7 @@ function ImageDropzone(props: any) {
              style={{ cursor: 'pointer' }}
         >
             <AddPhotoAlternateOutlinedIcon sx={{ color: "rgb(187, 186, 186)", fontSize: "48px", opacity: "0.7" }} />
-            <input ref={fileInputRef} className="FileInput" type="file" accept="image/*" onChange={ onImageFilesAdded } />
+            <input ref={fileInputRef} className="FileInput" type="file" accept="image/*" multiple={true} onChange={ onImageFilesAdded } />
         </div>
 
     )

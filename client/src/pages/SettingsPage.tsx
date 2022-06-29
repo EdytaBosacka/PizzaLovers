@@ -10,7 +10,8 @@ function SettingsPage() {
     const location = useLocation<{ login: string }>();
     const uploadImages = (images: (String|ArrayBuffer)[]) => {
         Axios.post('http://localhost:3001/uploadImages/', {
-          loggedUser: location.state.login
+          loggedUser: localStorage.getItem('login'),
+          images: images
         }).then((response) =>{
         }).catch(function(error){
           
