@@ -37,6 +37,7 @@ function ImageUpload({ uploadImages }: { uploadImages: (images: (String | ArrayB
       uploadImages(images);
     });
     setImageFiles([]);
+    setDialogOpened(false);
   };
 
   const handleClickCancel = () => {
@@ -49,8 +50,8 @@ function ImageUpload({ uploadImages }: { uploadImages: (images: (String | ArrayB
       <Dialog open={dialogOpened}>
         <DialogTitle style={{ backgroundColor: '#ffac45', color: 'white' }}>Upload images</DialogTitle>
         <div className="imagesCollection">
-          {imageFiles.map(function (image) {
-            return <img src={URL.createObjectURL(image)} className="imagePreview"></img>;
+          {imageFiles.map(function (image, i) {
+            return <img key={i} src={URL.createObjectURL(image)} className="imagePreview"></img>;
           })}
         </div>
         <div className="buttonBar">

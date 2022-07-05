@@ -21,7 +21,7 @@ function App() {
       },
       secondary: {
         main: '#fc7e42',
-      },
+      }
     },
     components: {
       MuiCalendarPicker: {

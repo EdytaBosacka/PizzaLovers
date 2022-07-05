@@ -68,9 +68,13 @@ app.post('/getUsers', (req,res) => {
 
 });
 
-app.post('/uploadImages', (req,res) => {
+app.post('/uploadImage', (req,res) => {
   const loggedUser = req.body.loggedUser;
-  userImages[loggedUser] = req.body.images;
+  if(!userImages[loggedUser])
+  {
+    userImages[loggedUser] = [];
+  }
+  userImages[loggedUser].push(req.body.image);
   try {
     fs.writeFileSync(usersImagesFileName, JSON.stringify(userImages));
   } catch (err) {
@@ -81,6 +85,10 @@ app.post('/uploadImages', (req,res) => {
 
 });
 
+app.post('/getImages', (req,res) => {
+  const loggedUser = req.body.loggedUser;
+  res.status(200).send(userImages[loggedUser]);
+})
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
