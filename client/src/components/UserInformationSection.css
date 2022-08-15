@@ -1,0 +1,13 @@
+.userInformationSection {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 100px; 
+    margin-top: 50px;
+    margin-left: 70px;
+    width:100%;
+}
+
+.sectionTitle {
+    text-align: left;
+}

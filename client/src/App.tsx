@@ -1,5 +1,5 @@
 import LoginPage from "./pages/LoginPage";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { createStore, StateMachineProvider } from "little-state-machine";
 import MainPage from "./pages/MainPage";
 import SettingsPage from "./pages/SettingsPage";
@@ -64,12 +64,12 @@ function App() {
     <ThemeProvider theme={theme}>
     <div className="App">
       <Router>
-        <Switch>
-          <Route path="/chat" component={ChatPage}/>
-          <Route path="/settings" component={SettingsPage}/>
-          <Route path="/home" component={MainPage}/>
-          <Route path="/" component={LoginPage}/>
-        </Switch>
+        <Routes>
+          <Route path="/chat" element={<ChatPage/>}/>
+          <Route path="/settings" element={<SettingsPage/>}/>
+          <Route path="/home" element={<MainPage/>}/>
+          <Route path="/" element={<LoginPage/>}/>
+        </Routes>
       
       </Router>
     </div>

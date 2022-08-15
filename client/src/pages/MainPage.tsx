@@ -6,11 +6,10 @@ import './MainPage.css';
 
 function MainPage() {
     const [usersState, setUsersState] = useState();
-    const location = useLocation<{ login: string }>();
-    console.log(location);
+  //  const location = useLocation<{ login: string }>();
     const getUsers = () => {
         Axios.post('http://localhost:3001/getUsers/', {
-          loggedUser: location.state.login
+       //   loggedUser: location.state.login
         }).then((response) =>{
             setUsersState(response.data);
             console.log(usersState);

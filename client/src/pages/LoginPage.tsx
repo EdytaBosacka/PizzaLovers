@@ -3,16 +3,16 @@ import Axios from 'axios';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 import Header from '../header.png';
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import loginImage from '../login-image.png';
 import Button from '../../node_modules/@mui/material/Button';
 
 function LoginPage() {
-  let history = useHistory();
+  let navigate = useNavigate();
   const routeChange = (loggedUser: string) => {
     let path = '/home';
     localStorage.setItem('login', loggedUser);
-    history.push(path, { login: loggedUser });
+    navigate(path);
   }
 
   const [loginState, setLoginState] = useState(0);

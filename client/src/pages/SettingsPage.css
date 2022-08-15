@@ -1,5 +1,4 @@
 .MainPage {
-    
     background-color: lightgoldenrodyellow;
     height: 100vh;
     margin-left: 210px;
@@ -8,7 +7,6 @@
 }
 
 .userSettings {
-    height: 95vh;
     width: 80vw;
     background: white;
     margin: 15px 15px 15px 15px;
@@ -29,4 +27,25 @@
     margin: 5px;
     border: 1px solid  rgba(0, 0, 0, 0.1);
     border-radius: 5px 5px 5px 5px;
+}
+
+.settingsSection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+
+}
+
+.workAndEducationSection {
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    width: 38vw;
+    min-height: 0vh;
+    
+}
+
+.interestsSection {
+    border-right: 10px solid rgba(0, 0, 0, 0.2);
+    width: 38vw;
+
 }
