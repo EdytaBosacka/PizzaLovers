@@ -88,7 +88,21 @@ app.post('/uploadImage', (req,res) => {
 app.post('/getImages', (req,res) => {
   const loggedUser = req.body.loggedUser;
   res.status(200).send(userImages[loggedUser]);
-})
+});
+
+app.post('/savePassword', (req,res) => {
+  const username = req.body.login;
+  const password = req.body.password;
+  const userIndex = registeredUsers.findIndex(element => element.login === username);
+  registeredUsers[userIndex].password = password;
+  try {
+    fs.writeFileSync(registeredUsersFileName, JSON.stringify(registeredUsers));
+  } catch (err) {
+    console.log(err);
+  }
+  res.status(200).send('Password was succesfully changed.');
+
+});
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);

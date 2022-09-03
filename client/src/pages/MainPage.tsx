@@ -12,7 +12,7 @@ function MainPage() {
        //   loggedUser: location.state.login
         }).then((response) =>{
             setUsersState(response.data);
-            console.log(usersState);
+           // console.log(usersState);
         }).catch(function(error){
           
         });

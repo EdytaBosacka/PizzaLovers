@@ -63,14 +63,14 @@
 
 .SuccessMessage {
   min-height: 20px;
-  margin-top: 10px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .SuccessMessage h3 {
   color: #4CAF50;
-  background-color: rgb(178, 247, 198, 0.6);
+ 
 }
 
 .loginImage {

@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { createStore, useStateMachine, StateMachineProvider, GlobalState, } from 'little-state-machine';
-//import { DatePicker } from "antd";
-//import Select from 'react-select';
 import moment from 'moment';
 
 import CheckIcon from '@mui/icons-material/Check';
@@ -18,11 +16,12 @@ import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 import Button from '../../node_modules/@mui/material/Button';
 import { StepIconProps } from '@mui/material/StepIcon';
+
+import * as Constants from '../shared/constants/Constants';
 import './RegisterForm.css';
 
 function RegisterForm({ registerForm, registerState }: { registerForm: (registerData: { [x: string]: any; }) => void, registerState: number }) {
@@ -47,11 +46,6 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
     const steps = ['Account Setup', 'User Details', 'Complete'];
 
     const dateFormat = 'YYYY/MM/DD';
-    const genderOptions = [
-        { value: 'male', label: 'Male' },
-        { value: 'female', label: 'Female' },
-        { value: 'no-binary', label: 'No-binary' },
-    ];
 
     useEffect(() => {
         if (registerState === 200) {
@@ -228,7 +222,7 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                                 {...register("gender", { required: true })}
                                 sx={{ width: '40%' }}
                             >
-                                {genderOptions?.map(genderOption => {
+                                {Constants.GENDER_OPTIONS?.map(genderOption => {
                                     return (
                                         <MenuItem key={genderOption.value} value={genderOption.value}>
                                             {genderOption.label}
@@ -246,9 +240,9 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                             {errors?.localization?.type === "pattern" && <p className="errorMessage">Localization contains invalid characters.</p>}
                         </div>
                         <div className="buttonBar">
-                            <Button  variant="outlined" onClick={backStep} > Back </Button>
+                            <Button variant="outlined" onClick={backStep} > Back </Button>
                             <div className="createAccountButton">
-                                <Button  variant="outlined" type="submit"> Create account </Button>
+                                <Button variant="outlined" type="submit"> Create account </Button>
                             </div>
                         </div>
 
@@ -261,7 +255,6 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
 
 
                 }
-                <pre>{JSON.stringify(state)}</pre>
             </form>
         </div>
     )
