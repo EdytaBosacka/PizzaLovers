@@ -45,8 +45,6 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
 
     const steps = ['Account Setup', 'User Details', 'Complete'];
 
-    const dateFormat = 'YYYY/MM/DD';
-
     useEffect(() => {
         if (registerState === 200) {
             setActiveStep(2);
@@ -201,7 +199,7 @@ function RegisterForm({ registerForm, registerState }: { registerForm: (register
                                             maxDate={new Date()}
                                             openTo="year"
                                             onChange={(newValue) => {
-                                                onChange(moment(newValue).format(dateFormat));
+                                                onChange(moment(newValue).format(Constants.DATE_FORMAT));
                                             }}
                                             renderInput={(params) =>
                                                 <TextField size="small" margin="normal" {...params} sx={{ width: '40%' }}

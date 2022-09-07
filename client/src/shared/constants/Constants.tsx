@@ -3,3 +3,5 @@ export const GENDER_OPTIONS = [
     { value: 'female', label: 'Female' },
     { value: 'no-binary', label: 'No-binary' },
 ];
+
+export const DATE_FORMAT = 'YYYY/MM/DD';

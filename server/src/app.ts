@@ -104,6 +104,22 @@ app.post('/savePassword', (req,res) => {
 
 });
 
+app.post('/saveUserDetails', (req, res) => {
+  const username = req.body.login;
+  const userDetails = req.body.userData;
+  try {
+      userInfo[username].name = userDetails.name;
+      userInfo[username].dateOfBirth = userDetails.dateOfBirth;
+      userInfo[username].gender = userDetails.gender;
+      userInfo[username].localization = userDetails.localization;
+      fs.writeFileSync(usersDetailsFileName, JSON.stringify(userInfo));
+  }
+  catch (err) {
+      console.log(err);
+  }
+  res.status(200).send('User information was succesfully changed.');
+});
+
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
 });

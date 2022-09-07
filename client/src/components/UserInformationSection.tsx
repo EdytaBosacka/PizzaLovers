@@ -6,9 +6,10 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Button from '../../node_modules/@mui/material/Button';
 import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
 import MenuItem from '@mui/material/MenuItem';
+import moment from 'moment';
 
-import Axios from 'axios';
 import * as Constants from '../shared/constants/Constants';
+import * as API from '../services/http/UserServices';
 import './UserInformationSection.css';
 
 function UserInformationSection() {
@@ -20,8 +21,11 @@ function UserInformationSection() {
     const [savePasswordStatus, setSavePasswordStatus] = useState(0);
 
     const [nameState, setNameState] = useState('');
+    const [nameValue, setNameValue] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState<Date | null>(new Date());
+    const [gender, setGender] = useState('');
     const [localizationState, setLocalizationState] = useState('');
+    const [localizationValue, setLocalizationValue] = useState('');
 
     const onChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPasswordValue(event.target.value);
@@ -40,17 +44,13 @@ function UserInformationSection() {
         }
     }
     const savePassword = () => {
-        Axios.post('http://localhost:3001/savePassword/', {
-            login: localStorage.getItem('login'),
-            password: passwordValue
-        }).then((response) => {
+        API.savePassword(passwordValue).then((response) => {
             setSavePasswordStatus(response.status);
-        }).catch(function (error) {
-
-        });
+        }).catch(function (error) {});
     }    
 
     const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNameValue(event.target.value);
         if (event.target.value.match(/^[A-Za-z]+$/i)) {
             setNameState('');
         } else {
@@ -60,14 +60,24 @@ function UserInformationSection() {
     const onChangeDateOfBirth = (newValue: Date | null) => {
         setDateOfBirth(newValue);
     };
+    const onChangeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setGender(event.target.value);
+    }
     const onChangeLocalization = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setLocalizationValue(event.target.value);
         if (event.target.value.match(/^[A-Za-z]+$/i)) {
             setLocalizationState('');
         } else {
             setLocalizationState('Localization contains invalid characters.');
         }
     }
+    const saveUserGeneralInformation = () => {
+        API.saveUserDetails({ name: nameValue, dateOfBirth:  moment(dateOfBirth).format(Constants.DATE_FORMAT), gender: gender, localization: localizationValue }).then((response) => {
+            setSavePasswordStatus(response.status);
+        }).catch(function (error) {
 
+        });
+    }    
    
 
     return (
@@ -116,6 +126,7 @@ function UserInformationSection() {
                         size="small"
                         margin="normal"
                         select
+                        onChange={onChangeGender}
                         sx={{ width: '100%' }}
                     >
                         {Constants.GENDER_OPTIONS?.map(genderOption => {
@@ -129,8 +140,13 @@ function UserInformationSection() {
                 </div>
                 <div className="localization">
                     <TextField
-                        label="Localization" margin="normal" size="small" autoComplete="off" error={nameState !== ""} helperText={localizationState} onChange={onChangeName} sx={{ width: '100%' }} />
+                        label="Localization" margin="normal" size="small" autoComplete="off" error={nameState !== ""} helperText={localizationState} onChange={onChangeLocalization} sx={{ width: '100%' }} />
                 </div>
+                <Button variant="outlined" onClick={saveUserGeneralInformation}  startIcon={<SaveAsOutlinedIcon />} type="submit" sx={{ marginTop: '20px', width: '50%' }}>Save</Button>
+                <div className="SuccessMessage"> 
+                {savePasswordStatus === 200 && <h3> Password was changed.</h3>}
+                </div>
+                
             </div>
 
         </div>
