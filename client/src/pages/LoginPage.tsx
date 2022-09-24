@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import loginImage from '../login-image.png';
 import Button from '../../node_modules/@mui/material/Button';
 
+import * as API from '../services/http/UserServices';
+
 function LoginPage() {
   let navigate = useNavigate();
   const routeChange = (loggedUser: string) => {
@@ -17,16 +19,13 @@ function LoginPage() {
 
   const [loginState, setLoginState] = useState(0);
   const [registerState, setRegisterState] = useState(0);
+
   const login = (loginData: { [x: string]: any }) => {
-    Axios.post('http://localhost:3001/login/', {
-      login: loginData.login,
-      password: loginData.password
-    }).then((response) => {
+    API.login(loginData).then((response) => {
       setLoginState(response.status);
       if (response.status === 200) {
         routeChange(loginData.login);
       }
-      console.log(response);
     }).catch(function (error) {
       if (error.response) {
         setLoginState(error.response.status);
@@ -35,22 +34,13 @@ function LoginPage() {
   }
 
   const registerForm = (registerData: { [x: string]: any }) => {
-    Axios.post('http://localhost:3001/register/', {
-      login: registerData.login,
-      password: registerData.password,
-      name: registerData.name,
-      dateOfBirth: registerData.dateOfBirth,
-      gender: registerData.gender.value,
-      localization: registerData.localization
-    }).then((response) => {
+    API.register(registerData).then((response) => {
       setRegisterState(response.status);
-      console.log(response);
     }).catch(function (error) {
       if (error.response) {
         setRegisterState(error.response.status);
       }
     });
-
   }
 
   const createAnotherUser = () => {

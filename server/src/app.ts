@@ -104,7 +104,7 @@ app.post('/savePassword', (req,res) => {
 
 });
 
-app.post('/saveUserDetails', (req, res) => {
+app.post('/saveUserGeneralInformation', (req, res) => {
   const username = req.body.login;
   const userDetails = req.body.userData;
   try {
@@ -118,6 +118,10 @@ app.post('/saveUserDetails', (req, res) => {
       console.log(err);
   }
   res.status(200).send('User information was succesfully changed.');
+});
+app.post('/getUserDetails', (req, res) => {
+  const loggedUser = req.body.loggedUser;
+  res.status(200).send(userInfo[loggedUser]);
 });
 
 app.listen(port, () => {

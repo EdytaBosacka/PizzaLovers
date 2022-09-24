@@ -22,10 +22,16 @@ function UserInformationSection() {
 
     const [nameState, setNameState] = useState('');
     const [nameValue, setNameValue] = useState('');
+    const oldNameValue = useRef('');
     const [dateOfBirth, setDateOfBirth] = useState<Date | null>(new Date());
+    const oldDateOfBirth = useRef('');
     const [gender, setGender] = useState('');
+    const oldGender = useRef('');
     const [localizationState, setLocalizationState] = useState('');
     const [localizationValue, setLocalizationValue] = useState('');
+    const oldLocalizationValue = useRef('');
+    const [saveGeneralInfoStatus, setSaveGeneralInfoStatus] = useState(0);
+
 
     const onChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPasswordValue(event.target.value);
@@ -46,8 +52,8 @@ function UserInformationSection() {
     const savePassword = () => {
         API.savePassword(passwordValue).then((response) => {
             setSavePasswordStatus(response.status);
-        }).catch(function (error) {});
-    }    
+        }).catch(function (error) { });
+    }
 
     const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNameValue(event.target.value);
@@ -72,13 +78,42 @@ function UserInformationSection() {
         }
     }
     const saveUserGeneralInformation = () => {
-        API.saveUserDetails({ name: nameValue, dateOfBirth:  moment(dateOfBirth).format(Constants.DATE_FORMAT), gender: gender, localization: localizationValue }).then((response) => {
-            setSavePasswordStatus(response.status);
-        }).catch(function (error) {
+        API.saveUserGeneralInformation({ name: nameValue, dateOfBirth: moment(dateOfBirth).format(Constants.DATE_FORMAT), gender: gender, localization: localizationValue })
+            .then((response) => {
+                setSaveGeneralInfoStatus(response.status);
+            }).catch(function (error) { });
+    }
+    const getUserDetails = () => {
+        API.getUserDetails().then((response) => {
+            if (response.data) {
+                setNameValue(response.data.name);
+                setDateOfBirth(response.data.dateOfBirth);
+                setGender(response.data.gender);
+                setLocalizationValue(response.data.localization);
 
-        });
-    }    
-   
+                oldNameValue.current = response.data.name;
+                oldDateOfBirth.current = response.data.dateOfBirth;
+                oldGender.current = response.data.gender;
+                oldLocalizationValue.current = response.data.localization;
+            }
+        }).catch(function (error) { });
+
+    }
+
+    const isSaveGenInfoDisabled = () : boolean => {
+        console.log(oldDateOfBirth.current);
+        console.log(dateOfBirth);
+        return oldNameValue.current === nameValue && oldDateOfBirth.current === moment(dateOfBirth).format(Constants.DATE_FORMAT)
+        && oldGender.current === gender && oldLocalizationValue.current === localizationValue;
+    }
+
+    const isSavePasswordDisabled = () : boolean => {
+        return !passwordValue || !confPasswordValue || !!passwordState || !!confPasswordState;
+    }
+
+    useEffect(() => {
+        getUserDetails();
+    }, [])
 
     return (
         <div className="userInformationSection">
@@ -92,9 +127,9 @@ function UserInformationSection() {
                     <TextField
                         label="Confirmed Password" margin="normal" type="password" size="small" autoComplete="off" error={confPasswordState !== ""} helperText={confPasswordState} onChange={onChangeConfPassword} sx={{ width: '100%' }} />
                 </div>
-                <Button variant="outlined" onClick={savePassword} disabled={!passwordValue || !confPasswordValue || !!passwordState || !!confPasswordState} startIcon={<SaveAsOutlinedIcon />} type="submit" sx={{ marginTop: '20px', width: '50%' }}>Save</Button>
+                <Button variant="outlined" onClick={savePassword} disabled={isSavePasswordDisabled()} startIcon={<SaveAsOutlinedIcon />} type="submit" sx={{ marginTop: '20px', width: '50%' }}>Save</Button>
                 <div className="SuccessMessage">
-                {savePasswordStatus === 200 && <h3> Password was changed.</h3>}
+                    {savePasswordStatus === 200 && <h3> Password was changed.</h3>}
                 </div>
             </div>
 
@@ -102,7 +137,7 @@ function UserInformationSection() {
                 <h3 className="sectionTitle">General Information</h3>
                 <div className="name">
                     <TextField
-                        label="Name" margin="normal" size="small" autoComplete="off" error={nameState !== ""} helperText={nameState} onChange={onChangeName} sx={{ width: '100%' }} />
+                        label="Name" value={nameValue} margin="normal" size="small" autoComplete="off" error={nameState !== ""} helperText={nameState} onChange={onChangeName} sx={{ width: '100%' }} />
                 </div>
                 <div className="dateOfBirth">
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -123,6 +158,7 @@ function UserInformationSection() {
                     <TextField
                         className="react-dropdown"
                         label="Gender"
+                        value={gender}
                         size="small"
                         margin="normal"
                         select
@@ -140,13 +176,13 @@ function UserInformationSection() {
                 </div>
                 <div className="localization">
                     <TextField
-                        label="Localization" margin="normal" size="small" autoComplete="off" error={nameState !== ""} helperText={localizationState} onChange={onChangeLocalization} sx={{ width: '100%' }} />
+                        label="Localization" value={localizationValue} margin="normal" size="small" autoComplete="off" error={localizationState !== ""} helperText={localizationState} onChange={onChangeLocalization} sx={{ width: '100%' }} />
                 </div>
-                <Button variant="outlined" onClick={saveUserGeneralInformation}  startIcon={<SaveAsOutlinedIcon />} type="submit" sx={{ marginTop: '20px', width: '50%' }}>Save</Button>
-                <div className="SuccessMessage"> 
-                {savePasswordStatus === 200 && <h3> Password was changed.</h3>}
+                <Button variant="outlined" onClick={saveUserGeneralInformation} disabled={isSaveGenInfoDisabled()} startIcon={<SaveAsOutlinedIcon />} type="submit" sx={{ marginTop: '20px', width: '50%' }}>Save</Button>
+                <div className="SuccessMessage">
+                    {saveGeneralInfoStatus === 200 && <h3> User information was changed.</h3>}
                 </div>
-                
+
             </div>
 
         </div>

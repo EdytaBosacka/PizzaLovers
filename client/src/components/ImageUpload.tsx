@@ -59,7 +59,6 @@ function ImageUpload({ uploadImages }: { uploadImages: (images: (String | ArrayB
           <Button variant="outlined" onClick={handleFileUpload} startIcon={< FileUploadOutlinedIcon />}>Upload</Button>
         </div>
       </Dialog>
-
     </div>
 
   )

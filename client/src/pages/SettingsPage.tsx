@@ -1,16 +1,16 @@
-import SideBar from '../components/SideBar';
-import ImageUpload from '../components/ImageUpload';
-import UserInformationSection from '../components/UserInformationSection';
-import './SettingsPage.css';
-import React, { useState, useEffect, useRef } from 'react';
-import Button from '../../node_modules/@mui/material/Button';
+import Axios from 'axios';
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
-import Axios from 'axios';
-import TextField from '@mui/material/TextField';
+import Button from '../../node_modules/@mui/material/Button';
+import ImageUpload from '../components/ImageUpload';
+import React, { useState, useEffect, useRef } from 'react';
+import SideBar from '../components/SideBar';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import UserInformationSection from '../components/UserInformationSection';
 
+import * as API from '../services/http/UserServices';
+import './SettingsPage.css';
 
 function SettingsPage() {
 
@@ -21,27 +21,17 @@ function SettingsPage() {
 
     const uploadImages = (images: (String | ArrayBuffer)[]) => {
         images.forEach((image) => {
-            Axios.post('http://localhost:3001/uploadImage/', {
-                loggedUser: localStorage.getItem('login'),
-                image: image
-            }).then((response) => {
+            API.uploadImage(image).then((response) => {
                 getImages();
-            }).catch(function (error) {
-
-            });
+            }).catch(function (error) { });
         })
-
     }
     const getImages = () => {
-        Axios.post('http://localhost:3001/getImages', {
-            loggedUser: localStorage.getItem('login'),
-        }).then((response) => {
+        API.getImages().then((response) => {
             if (response.data) {
                 setUserImages(response.data);
             }
-        }).catch(function (error) {
-
-        });
+        }).catch(function (error) { });
     }
 
     const displayNextImages = () => {
@@ -86,9 +76,9 @@ function SettingsPage() {
                     </Tabs>
                 </div>
                 <div>
-                        {tabValue === 0 && (
-                            <UserInformationSection/>
-                        )}
+                    {tabValue === 0 && (
+                        <UserInformationSection />
+                    )}
                 </div>
 
             </div>
