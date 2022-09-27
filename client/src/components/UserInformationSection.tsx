@@ -4,7 +4,10 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Button from '../../node_modules/@mui/material/Button';
+import InputAdornment from '@mui/material/InputAdornment';
 import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import TwitterIcon from '@mui/icons-material/Twitter';
 import MenuItem from '@mui/material/MenuItem';
 import moment from 'moment';
 
@@ -32,6 +35,14 @@ function UserInformationSection() {
     const oldLocalizationValue = useRef('');
     const [saveGeneralInfoStatus, setSaveGeneralInfoStatus] = useState(0);
 
+    const [phoneNumberValue, setPhoneNumberValue] = useState('');
+    const [emailState, setEmailState] = useState('');
+    const [emailValue, setEmailValue] = useState('');
+    const [instagramState, setInstagramState] = useState('');
+    const [instagramValue, setInstagramValue] = useState('');
+
+
+    const [isInitialized, setIsInitialized] = useState(false);
 
     const onChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPasswordValue(event.target.value);
@@ -81,30 +92,57 @@ function UserInformationSection() {
         API.saveUserGeneralInformation({ name: nameValue, dateOfBirth: moment(dateOfBirth).format(Constants.DATE_FORMAT), gender: gender, localization: localizationValue })
             .then((response) => {
                 setSaveGeneralInfoStatus(response.status);
+                oldNameValue.current = nameValue;
+                oldDateOfBirth.current = moment(dateOfBirth).format(Constants.DATE_FORMAT);
+                oldGender.current = gender;
+                oldLocalizationValue.current = localizationValue;
             }).catch(function (error) { });
     }
+
+    const onChangePhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => { 
+        if (event.target.value.match(/^[0-9]*$/i)) {
+            setPhoneNumberValue(event.target.value);
+        } 
+    }
+    const onChangeEmail= (event: React.ChangeEvent<HTMLInputElement>) => { 
+        setEmailValue(event.target.value);
+        if (event.target.value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i)) {
+            setEmailState('');
+        } else {
+            setEmailState('Email format is invalid.');
+        }
+    }
+    const onChangeInstagram= (event: React.ChangeEvent<HTMLInputElement>) => { 
+        setInstagramValue(event.target.value);
+        if (event.target.value.match(/^[\w](?!.*?\.{2})[\w.]{1,28}[\w]$/i)) {
+            setInstagramState('');
+        } else {
+            setInstagramState('Instagram username is invalid.');
+        }
+    }
+
     const getUserDetails = () => {
         API.getUserDetails().then((response) => {
             if (response.data) {
+                oldNameValue.current = response.data.name;
+                oldDateOfBirth.current = response.data.dateOfBirth;
+                oldGender.current = response.data.gender;
+                oldLocalizationValue.current = response.data.localization;
+
                 setNameValue(response.data.name);
                 setDateOfBirth(response.data.dateOfBirth);
                 setGender(response.data.gender);
                 setLocalizationValue(response.data.localization);
 
-                oldNameValue.current = response.data.name;
-                oldDateOfBirth.current = response.data.dateOfBirth;
-                oldGender.current = response.data.gender;
-                oldLocalizationValue.current = response.data.localization;
+                setIsInitialized(true);
             }
         }).catch(function (error) { });
 
     }
 
     const isSaveGenInfoDisabled = () : boolean => {
-        console.log(oldDateOfBirth.current);
-        console.log(dateOfBirth);
-        return oldNameValue.current === nameValue && oldDateOfBirth.current === moment(dateOfBirth).format(Constants.DATE_FORMAT)
-        && oldGender.current === gender && oldLocalizationValue.current === localizationValue;
+        return !isInitialized || !!nameState || !!localizationState || ( oldNameValue.current === nameValue && oldDateOfBirth.current === moment(dateOfBirth).format(Constants.DATE_FORMAT)
+        && oldGender.current === gender && oldLocalizationValue.current === localizationValue );
     }
 
     const isSavePasswordDisabled = () : boolean => {
@@ -182,7 +220,46 @@ function UserInformationSection() {
                 <div className="SuccessMessage">
                     {saveGeneralInfoStatus === 200 && <h3> User information was changed.</h3>}
                 </div>
+            </div>
 
+            <div className="section">
+                <h3 className="sectionTitle">Contact Information</h3>
+                <div className="phoneNumber">
+                    <TextField
+                        label="Phone Number" value={phoneNumberValue} margin="normal" size="small" autoComplete="off" onChange={onChangePhoneNumber} sx={{ width: '100%' }} />
+                </div>
+                <div className="email">
+                    <TextField
+                        label="Email" margin="normal" size="small" autoComplete="off" error={emailState !== ""} helperText={emailState} onChange={onChangeEmail} sx={{ width: '100%' }} />
+                </div>
+                <div className="instagram">
+                    <TextField
+                        label="Instagram"
+                        InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <InstagramIcon/>
+                              </InputAdornment>
+                            )
+                        }} 
+                        margin="normal" size="small" autoComplete="off" error={instagramState !== ""} helperText={instagramState} onChange={onChangeInstagram} sx={{ width: '100%' }} />
+                </div>
+                <div className="twitter">
+                    <TextField
+                        label="Twitter"
+                        InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <TwitterIcon/>
+                              </InputAdornment>
+                            )
+                        }} 
+                        margin="normal" size="small" autoComplete="off" onChange={onChangeEmail} sx={{ width: '100%' }} />
+                </div>
+                <Button variant="outlined" onClick={savePassword} disabled={isSavePasswordDisabled()} startIcon={<SaveAsOutlinedIcon />} type="submit" sx={{ marginTop: '20px', width: '50%' }}>Save</Button>
+                <div className="SuccessMessage">
+                    {savePasswordStatus === 200 && <h3> Password was changed.</h3>}
+                </div>
             </div>
 
         </div>

@@ -3,7 +3,7 @@
     flex-direction: row;
     justify-content: left;
     gap: 150px; 
-    margin-top: 50px;
+    margin-top: 30px;
     margin-left: 70px;
  
 }
@@ -14,5 +14,5 @@
 }
 
 .section {
-    width: 15vw;
+    width: 17vw;
 }
