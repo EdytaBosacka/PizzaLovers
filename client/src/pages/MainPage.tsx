@@ -1,32 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
-import { useLocation } from "react-router-dom";
 import SideBar from '../components/SideBar';
 import './MainPage.css';
+import * as API from '../services/http/UserServices';
 
 function MainPage() {
-    const [usersState, setUsersState] = useState();
-  //  const location = useLocation<{ login: string }>();
-    const getUsers = () => {
-        Axios.post('http://localhost:3001/getUsers/', {
-       //   loggedUser: location.state.login
-        }).then((response) =>{
-            setUsersState(response.data);
-           // console.log(usersState);
-        }).catch(function(error){
-          
-        });
-      }
-    getUsers();
-    
-    return(
+    const [usersList, setUsersList] = useState<{0: String, 1: Object}[]>([]);
+    const [userPhotos,setUserPhotos] = useState([]);
+
+    const getUsers = async () => {
+        await API.getUsers().then((response) => {
+            setUsersList(response.data);
+            console.log(response.data);
+        }).catch(function (error) { });
+    }
+
+    const getUserPhotos = () => {
+        if(usersList.length > 0){
+            API.getImages(usersList[0][0])
+            .then((response) => {
+                console.log(response.data);
+                setUserPhotos(response.data);
+            }).catch(function(error) {});
+        }
+
+    }
+
+    useEffect(() => {
+        getUsers();
+    }, []);
+
+    useEffect(() => {
+        getUserPhotos()
+    }, [usersList]);
+
+    return (
         <div className="MainPage">
-        <SideBar/>
-        <div className="usersSwiper"> 
-        <button onClick={getUsers}>ewew</button>
+            <SideBar />
+            <div className="usersSwiper">
+                <div className="userPhoto">
+                </div>
+                <div className="userDetails">
+                    <input type="button" onClick={getUserPhotos}/>
+                    <img src={userPhotos[0]} className="image"></img>;
+
+                </div>
+            </div>
         </div>
-        </div>
-        
+
     );
 }
 

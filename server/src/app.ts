@@ -15,7 +15,7 @@ const usersImagesFileName = './src/resources/usersImages.json';
 try {
   registeredUsers = JSON.parse(fs.readFileSync(registeredUsersFileName, 'utf8'));
   userInfo = JSON.parse(fs.readFileSync(usersDetailsFileName, 'utf8'));
-  userImages = JSON.parse(fs.readFileSync(usersImagesFileName,'utf8'));
+  userImages = JSON.parse(fs.readFileSync(usersImagesFileName, 'utf8'));
 } catch (err) {
   console.error(err)
 }
@@ -57,21 +57,18 @@ app.post('/register', (req, res) => {
   }
 });
 
-app.post('/getUsers', (req,res) => {
+app.post('/getUsers', (req, res) => {
   var userInfoArray = Object.entries(userInfo);
-  userInfoArray = userInfoArray.filter((key) => {
-    key != req.body.loggedUser;
+  userInfoArray = userInfoArray.filter(([key, value]) => {
+    return key != req.body.loggedUser;
   })
-  var userInfoFiltered = Object.fromEntries(userInfoArray);
-
-  res.status(200).send(userInfoFiltered);
+  res.status(200).send(userInfoArray);
 
 });
 
-app.post('/uploadImage', (req,res) => {
+app.post('/uploadImage', (req, res) => {
   const loggedUser = req.body.loggedUser;
-  if(!userImages[loggedUser])
-  {
+  if (!userImages[loggedUser]) {
     userImages[loggedUser] = [];
   }
   userImages[loggedUser].push(req.body.image);
@@ -81,16 +78,16 @@ app.post('/uploadImage', (req,res) => {
     console.log(err);
   }
   res.status(200).send('Upload Images successful');
-  
+
 
 });
 
-app.post('/getImages', (req,res) => {
-  const loggedUser = req.body.loggedUser;
-  res.status(200).send(userImages[loggedUser]);
+app.post('/getImages', (req, res) => {
+  const user = req.body.user;
+  res.status(200).send(userImages[user]);
 });
 
-app.post('/savePassword', (req,res) => {
+app.post('/savePassword', (req, res) => {
   const username = req.body.login;
   const password = req.body.password;
   const userIndex = registeredUsers.findIndex(element => element.login === username);
@@ -108,17 +105,34 @@ app.post('/saveUserGeneralInformation', (req, res) => {
   const username = req.body.login;
   const userDetails = req.body.userData;
   try {
-      userInfo[username].name = userDetails.name;
-      userInfo[username].dateOfBirth = userDetails.dateOfBirth;
-      userInfo[username].gender = userDetails.gender;
-      userInfo[username].localization = userDetails.localization;
-      fs.writeFileSync(usersDetailsFileName, JSON.stringify(userInfo));
+    userInfo[username].name = userDetails.name;
+    userInfo[username].dateOfBirth = userDetails.dateOfBirth;
+    userInfo[username].gender = userDetails.gender;
+    userInfo[username].localization = userDetails.localization;
+    fs.writeFileSync(usersDetailsFileName, JSON.stringify(userInfo));
   }
   catch (err) {
-      console.log(err);
+    console.log(err);
   }
   res.status(200).send('User information was succesfully changed.');
 });
+
+app.post('/saveUserContactInformation', (req, res) => {
+  const username = req.body.login;
+  const userContactInfo = req.body.userData;
+  try {
+    userInfo[username].phoneNumber = userContactInfo.phoneNumber;
+    userInfo[username].email = userContactInfo.email;
+    userInfo[username].instagram = userContactInfo.instagram;
+    userInfo[username].twitter = userContactInfo.twitter;
+    fs.writeFileSync(usersDetailsFileName, JSON.stringify(userInfo));
+  }
+  catch (err) {
+    console.log(err);
+  }
+  res.status(200).send('User contact information was succesfully changed.');
+});
+
 app.post('/getUserDetails', (req, res) => {
   const loggedUser = req.body.loggedUser;
   res.status(200).send(userInfo[loggedUser]);

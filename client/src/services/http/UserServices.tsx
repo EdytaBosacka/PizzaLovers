@@ -32,15 +32,28 @@ export const saveUserGeneralInformation = (userData: { name: String, dateOfBirth
     });
 }
 
+export const saveUserContactInformation = (userData: { phoneNumber: String, email: String, instagram: String, twitter: String }) => {
+    return Axios.post('http://localhost:3001/saveUserContactInformation', {
+        login: localStorage.getItem('login'),
+        userData: userData
+    });
+}
+
 export const getUserDetails = (): Promise<AxiosResponse<any, any>> => {
     return Axios.post('http://localhost:3001/getUserDetails', {
         loggedUser: localStorage.getItem('login'),
     });
 }
 
-export const getImages = (): Promise<AxiosResponse<any, any>> => {
-    return Axios.post('http://localhost:3001/getImages', {
+export const getUsers = (): Promise<AxiosResponse<any, any>> => {
+    return Axios.post('http://localhost:3001/getUsers', {
         loggedUser: localStorage.getItem('login'),
+    });
+}
+
+export const getImages = (userName: String | null): Promise<AxiosResponse<any, any>> => {
+    return Axios.post('http://localhost:3001/getImages', {
+        user: userName,
     });
 }
 

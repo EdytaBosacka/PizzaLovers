@@ -35,12 +35,18 @@ function UserInformationSection() {
     const oldLocalizationValue = useRef('');
     const [saveGeneralInfoStatus, setSaveGeneralInfoStatus] = useState(0);
 
-    const [phoneNumberValue, setPhoneNumberValue] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const oldPhoneNumber = useRef('');
     const [emailState, setEmailState] = useState('');
     const [emailValue, setEmailValue] = useState('');
+    const oldEmailValue = useRef('');
     const [instagramState, setInstagramState] = useState('');
     const [instagramValue, setInstagramValue] = useState('');
-
+    const oldInstagramValue = useRef('');
+    const [twitterState, setTwitterState] = useState('');
+    const [twitterValue, setTwitterValue] = useState('');
+    const oldTwitterValue = useRef('');
+    const [saveContactInfoStatus, setSaveContactInfoStatus] = useState(0);
 
     const [isInitialized, setIsInitialized] = useState(false);
 
@@ -99,9 +105,10 @@ function UserInformationSection() {
             }).catch(function (error) { });
     }
 
+
     const onChangePhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => { 
         if (event.target.value.match(/^[0-9]*$/i)) {
-            setPhoneNumberValue(event.target.value);
+            setPhoneNumber(event.target.value);
         } 
     }
     const onChangeEmail= (event: React.ChangeEvent<HTMLInputElement>) => { 
@@ -120,6 +127,25 @@ function UserInformationSection() {
             setInstagramState('Instagram username is invalid.');
         }
     }
+    const onChangeTwitter= (event: React.ChangeEvent<HTMLInputElement>) => { 
+        setTwitterValue(event.target.value);
+        if (event.target.value.match(/^@?(\w){1,15}$/i)) {
+            setTwitterState('');
+        } else {
+            setTwitterState('Twitter username is invalid.');
+        }
+    }
+    const saveUserContactInformation = () => {
+        API.saveUserContactInformation({ phoneNumber: phoneNumber, email: emailValue, instagram: instagramValue, twitter: twitterValue })
+        .then((response) => {
+            setSaveContactInfoStatus(response.status);
+            oldPhoneNumber.current = phoneNumber;
+            oldEmailValue.current = emailValue;
+            oldInstagramValue.current = instagramValue;
+            oldTwitterValue.current = twitterValue;
+        }).catch(function (error) { });
+    }
+    
 
     const getUserDetails = () => {
         API.getUserDetails().then((response) => {
@@ -128,16 +154,29 @@ function UserInformationSection() {
                 oldDateOfBirth.current = response.data.dateOfBirth;
                 oldGender.current = response.data.gender;
                 oldLocalizationValue.current = response.data.localization;
+                oldPhoneNumber.current = response.data.phoneNumber;
+                oldEmailValue.current = response.data.email;
+                oldInstagramValue.current = response.data.instagram;
+                oldTwitterValue.current = response.data.twitter;
 
                 setNameValue(response.data.name);
                 setDateOfBirth(response.data.dateOfBirth);
                 setGender(response.data.gender);
                 setLocalizationValue(response.data.localization);
+                setPhoneNumber(response.data.phoneNumber);
+                setEmailValue(response.data.email);
+                setInstagramValue(response.data.instagram);
+                setTwitterValue(response.data.twitter);
 
                 setIsInitialized(true);
             }
         }).catch(function (error) { });
 
+    }
+
+    const isSaveContactInfoDisabled = () : boolean => {
+        return !isInitialized || !!emailState || !!instagramState || !!twitterState || ( oldPhoneNumber.current === phoneNumber && oldEmailValue.current === emailValue
+        && oldInstagramValue.current === instagramValue && oldTwitterValue.current === twitterValue );
     }
 
     const isSaveGenInfoDisabled = () : boolean => {
@@ -226,7 +265,7 @@ function UserInformationSection() {
                 <h3 className="sectionTitle">Contact Information</h3>
                 <div className="phoneNumber">
                     <TextField
-                        label="Phone Number" value={phoneNumberValue} margin="normal" size="small" autoComplete="off" onChange={onChangePhoneNumber} sx={{ width: '100%' }} />
+                        label="Phone Number" value={phoneNumber} margin="normal" size="small" autoComplete="off" onChange={onChangePhoneNumber} sx={{ width: '100%' }} />
                 </div>
                 <div className="email">
                     <TextField
@@ -254,11 +293,11 @@ function UserInformationSection() {
                               </InputAdornment>
                             )
                         }} 
-                        margin="normal" size="small" autoComplete="off" onChange={onChangeEmail} sx={{ width: '100%' }} />
+                        margin="normal" size="small" autoComplete="off" error={twitterState !== ""} helperText={twitterState} onChange={onChangeTwitter} sx={{ width: '100%' }} />
                 </div>
-                <Button variant="outlined" onClick={savePassword} disabled={isSavePasswordDisabled()} startIcon={<SaveAsOutlinedIcon />} type="submit" sx={{ marginTop: '20px', width: '50%' }}>Save</Button>
+                <Button variant="outlined" onClick={saveUserContactInformation} disabled={isSaveContactInfoDisabled()} startIcon={<SaveAsOutlinedIcon />} type="submit" sx={{ marginTop: '20px', width: '50%' }}>Save</Button>
                 <div className="SuccessMessage">
-                    {savePasswordStatus === 200 && <h3> Password was changed.</h3>}
+                    {saveContactInfoStatus === 200 && <h3> User contact info was saved.</h3>}
                 </div>
             </div>
 

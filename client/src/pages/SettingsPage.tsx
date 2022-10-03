@@ -27,7 +27,7 @@ function SettingsPage() {
         })
     }
     const getImages = () => {
-        API.getImages().then((response) => {
+        API.getImages(localStorage.getItem('login')).then((response) => {
             if (response.data) {
                 setUserImages(response.data);
             }
