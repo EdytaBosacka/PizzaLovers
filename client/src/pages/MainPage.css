@@ -1,10 +1,7 @@
 .MainPage {
-    
     background-color: lightgoldenrodyellow;
     height: 100vh;
     margin-left: 210px;
-    display: flex;
-    justify-content: center;
 }
 
 .usersSwiper {
@@ -14,4 +11,31 @@
     margin: 15px 15px 15px 15px;
     border-radius: 20px 20px 20px 20px;
     box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.userPhoto {
+    align-items: center; 
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.photo {
+    height: 90vh;
+    width: 40vw;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.userDetails {
+    height: 90vh;
+    width: 40vw;
+}
+
+.b {
+    color: #c6531e;
+    font-size: 28px;
 }
