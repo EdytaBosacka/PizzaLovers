@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import Axios from 'axios';
 import SideBar from '../components/SideBar';
 import Fab from '@mui/material/Fab';
-import Button from '../../node_modules/@mui/material/Button';
+import Box from '@mui/material/Box';
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import CloseIcon from '@mui/icons-material/Close';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import './MainPage.css';
 
 import * as Constants from '../shared/constants/Constants';
 import * as API from '../services/http/UserServices';
 
 function MainPage() {
-    const [usersList, setUsersList] = useState<{ 0: String, 1: {name: String, dateOfBirth: string, gender: String, localization: String } }[]>([]);
+    const [usersList, setUsersList] = useState<{ 0: String, 1: { name: String, dateOfBirth: string, gender: String, localization: String } }[]>([]);
     const [userPhotos, setUserPhotos] = useState([]);
     const [currentPhoto, setCurrentPhoto] = useState(0);
 
@@ -19,7 +20,20 @@ function MainPage() {
         color: "#e9692c", background: "white", boxShadow: 0,
         "&:hover":
             { border: "1px solid #c6531e", color: '#c6531e', backgroundColor: '#ffe593' },
-        "&:disabled": 
+        "&:disabled":
+            { color: "white", background: "white" }
+    }
+
+    const actionButtonStyle = {
+        width: '80px', height: '80px',
+        background: "white",
+        "&:hover":
+            { transform: "scale(1.08)" },
+        "&:hover .match":
+            { color: '#28a745' },
+        "&:hover .unmatch":
+            { color: '#dc3545' },
+        "&:disabled":
             { color: "white", background: "white" }
     }
 
@@ -70,18 +84,28 @@ function MainPage() {
             <SideBar />
             <div className="usersSwiper">
                 <div className="userPhoto">
-                    <Fab  disabled={isFirstPhoto()} onClick={previousPhoto}
+                    <Fab disabled={isFirstPhoto()} onClick={previousPhoto}
                         sx={swiperButtonStyle}>
                         <ArrowBackIosNewOutlinedIcon />
                     </Fab>
-                    <img src={userPhotos[currentPhoto]} className="photo"></img>
+                    <div className="photoContainer">
+                        <img src={userPhotos[currentPhoto]} className="photo"></img>
+                        <Box className="actionButtonPanel" >
+                            <Fab sx={actionButtonStyle}>
+                                <FavoriteIcon className="match" color='primary' sx={{ fontSize: '30px' }} />
+                            </Fab>
+                            <Fab sx={actionButtonStyle}>
+                                <CloseIcon className="unmatch" color='primary' sx={{ fontSize: '30px' }} />
+                            </Fab>
+                        </Box>
+                    </div>
                     <Fab disabled={isLastPhoto()} onClick={nextPhoto}
                         sx={swiperButtonStyle}>
                         <ArrowForwardIosOutlinedIcon />
                     </Fab>
                 </div>
                 <div className="userDetails">
-                    <h1 className="b">{!!usersList[0] && usersList[0][1].name + "," + calculateUserAge() }</h1>
+                    <h1 className="b">{!!usersList[0] && usersList[0][1].name + "," + calculateUserAge()}</h1>
 
                 </div>
             </div>

@@ -17,7 +17,7 @@
 }
 
 .userPhoto {
-    align-items: center; 
+    align-items: center;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -30,12 +30,26 @@
     margin-right: 5px;
 }
 
+.photoContainer {
+    position: relative;
+    align-items: center;
+}
+
+.actionButtonPanel {
+    position: absolute;
+    display: flex;
+    gap: 20px;
+    left: 50%;
+    bottom: 15px;
+    transform: translate(-50%);
+}
+
 .userDetails {
     height: 90vh;
     width: 40vw;
 }
-
 .b {
     color: #c6531e;
     font-size: 28px;
 }
+
