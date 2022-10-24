@@ -6,6 +6,8 @@ import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutl
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
 import './MainPage.css';
 
 import * as Constants from '../shared/constants/Constants';
@@ -33,8 +35,10 @@ function MainPage() {
             { color: '#28a745' },
         "&:hover .unmatch":
             { color: '#dc3545' },
-        "&:disabled":
-            { color: "white", background: "white" }
+        "&:disabled .match":
+            { color: "gray" },
+        "&:disabled .unmatch":
+            { color: "gray" },
     }
 
     const getUsers = async () => {
@@ -54,6 +58,20 @@ function MainPage() {
         }
     }
 
+    const likeAction = () => {
+        API.saveUserLike(usersList[0][0], true).then((response) => {
+            usersList.shift();
+            setUsersList([...usersList]);
+        }).catch(function (error) { });
+    }
+
+    const dislikeAction = () => {
+        API.saveUserLike(usersList[0][0], false).then((response) => {
+            usersList.shift();
+            setUsersList([...usersList]);
+        }).catch(function (error) { });
+    }
+
     const calculateUserAge = (): Number => {
         const timeDifference = new Date().getTime() - new Date(usersList[0][1].dateOfBirth).getTime();
         return Math.abs(new Date(timeDifference).getUTCFullYear() - 1970);
@@ -70,6 +88,11 @@ function MainPage() {
     const isFirstPhoto = (): boolean => {
         return currentPhoto <= 0;
     }
+    const isUsersListEmpty = (): boolean => {
+        return usersList.length == 0;
+    }
+
+
 
     useEffect(() => {
         getUsers();
@@ -82,33 +105,44 @@ function MainPage() {
     return (
         <div className="MainPage">
             <SideBar />
-            <div className="usersSwiper">
-                <div className="userPhoto">
-                    <Fab disabled={isFirstPhoto()} onClick={previousPhoto}
-                        sx={swiperButtonStyle}>
-                        <ArrowBackIosNewOutlinedIcon />
-                    </Fab>
-                    <div className="photoContainer">
-                        <img src={userPhotos[currentPhoto]} className="photo"></img>
-                        <Box className="actionButtonPanel" >
-                            <Fab sx={actionButtonStyle}>
-                                <FavoriteIcon className="match" color='primary' sx={{ fontSize: '30px' }} />
-                            </Fab>
-                            <Fab sx={actionButtonStyle}>
-                                <CloseIcon className="unmatch" color='primary' sx={{ fontSize: '30px' }} />
-                            </Fab>
-                        </Box>
+            {!isUsersListEmpty() &&
+                <div className="usersSwiper">
+                    <div className="userPhoto">
+                        <Fab disabled={isFirstPhoto()} onClick={previousPhoto}
+                            sx={swiperButtonStyle}>
+                            <ArrowBackIosNewOutlinedIcon />
+                        </Fab>
+                        <div className="photoContainer">
+                            <img src={userPhotos[currentPhoto]} className="photo"></img>
+                            <Box className="actionButtonPanel" >
+                                <Fab disabled={isUsersListEmpty()} onClick={likeAction} sx={actionButtonStyle}>
+                                    <FavoriteIcon className="match" color='primary' sx={{ fontSize: '30px' }} />
+                                </Fab>
+                                <Fab disabled={isUsersListEmpty()} onClick={dislikeAction} sx={actionButtonStyle}>
+                                    <CloseIcon className="unmatch" color='primary' sx={{ fontSize: '30px' }} />
+                                </Fab>
+                            </Box>
+                        </div>
+                        <Fab disabled={isLastPhoto()} onClick={nextPhoto}
+                            sx={swiperButtonStyle}>
+                            <ArrowForwardIosOutlinedIcon />
+                        </Fab>
                     </div>
-                    <Fab disabled={isLastPhoto()} onClick={nextPhoto}
-                        sx={swiperButtonStyle}>
-                        <ArrowForwardIosOutlinedIcon />
-                    </Fab>
+                    <div className="userDetails">
+                        <h1 className="b">{!!usersList[0] && usersList[0][1].name + "," + calculateUserAge()}</h1>
+                    </div>
                 </div>
-                <div className="userDetails">
-                    <h1 className="b">{!!usersList[0] && usersList[0][1].name + "," + calculateUserAge()}</h1>
+            }
+            {isUsersListEmpty() &&
+                <div className="usersSwiper">
+                    <div className="noMoreUsersFoundContainer">
+                        <FavoriteBorderIcon color='primary' sx={{ fontSize: '18px' }} />
+                        <h1 className="noMoreUsersFound"> <FavoriteBorderIcon color='primary' /> No more PizzaLovers were found at the moment. <FavoriteBorderIcon color='primary' /></h1>
+                        <FavoriteBorderIcon color='primary' sx={{ fontSize: '18px' }} />
+                    </div>
+                </div>
+            }
 
-                </div>
-            </div>
         </div>
 
     );

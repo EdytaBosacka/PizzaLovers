@@ -39,6 +39,14 @@ export const saveUserContactInformation = (userData: { phoneNumber: String, emai
     });
 }
 
+export const saveUserLike = (likedUsername: String, isLike: boolean) => {
+    return Axios.post('http://localhost:3001/saveUserLike', {
+        login: localStorage.getItem('login'),
+        likedUsername: likedUsername,
+        isLike: isLike
+    });
+}
+
 export const getUserDetails = (): Promise<AxiosResponse<any, any>> => {
     return Axios.post('http://localhost:3001/getUserDetails', {
         loggedUser: localStorage.getItem('login'),

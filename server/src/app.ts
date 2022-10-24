@@ -5,17 +5,20 @@ import { addSyntheticLeadingComment } from 'typescript';
 const fs = require('fs');
 const app = express();
 const port = 3001;
-var registeredUsers = [{ login: 'admin', password: 'admin' }];
-var userInfo = {};
-var userImages = {};
+let registeredUsers = [{ login: 'admin', password: 'admin' }];
+let userInfo = {};
+let userImages = {};
+let userLikes = {};
 const registeredUsersFileName = './src/resources/registeredUsers.json';
 const usersDetailsFileName = './src/resources/usersDetails.json';
 const usersImagesFileName = './src/resources/usersImages.json';
+const usersLikesFilesName = './src/resources/usersLikes.json';
 
 try {
   registeredUsers = JSON.parse(fs.readFileSync(registeredUsersFileName, 'utf8'));
   userInfo = JSON.parse(fs.readFileSync(usersDetailsFileName, 'utf8'));
   userImages = JSON.parse(fs.readFileSync(usersImagesFileName, 'utf8'));
+  userLikes = JSON.parse(fs.readFileSync(usersLikesFilesName, 'utf8'));
 } catch (err) {
   console.error(err)
 }
@@ -58,12 +61,13 @@ app.post('/register', (req, res) => {
 });
 
 app.post('/getUsers', (req, res) => {
-  var userInfoArray = Object.entries(userInfo);
+  let userInfoArray = Object.entries(userInfo);
   userInfoArray = userInfoArray.filter(([key, value]) => {
-    return key != req.body.loggedUser;
+    let isLiked = userLikes[req.body.loggedUser]?.likes?.includes(key);
+    let isDisliked = userLikes[req.body.loggedUser]?.dislikes?.includes(key);
+    return key != req.body.loggedUser && !isLiked && !isDisliked;
   })
   res.status(200).send(userInfoArray);
-
 });
 
 app.post('/uploadImage', (req, res) => {
@@ -78,8 +82,6 @@ app.post('/uploadImage', (req, res) => {
     console.log(err);
   }
   res.status(200).send('Upload Images successful');
-
-
 });
 
 app.post('/getImages', (req, res) => {
@@ -131,6 +133,36 @@ app.post('/saveUserContactInformation', (req, res) => {
     console.log(err);
   }
   res.status(200).send('User contact information was succesfully changed.');
+});
+
+app.post('/saveUserLike', (req, res) => {
+  const loggedUser = req.body.login;
+  const likedUsername = req.body.likedUsername;
+  const isLike = req.body.isLike;
+
+  if (!userLikes[loggedUser]) {
+    userLikes[loggedUser] = {};
+  }
+
+  if (isLike) {
+    if (!userLikes[loggedUser].likes) {
+      userLikes[loggedUser].likes = [];
+    }
+    userLikes[loggedUser].likes.push(likedUsername);
+  } else {
+    if (!userLikes[loggedUser].dislikes) {
+      userLikes[loggedUser].dislikes = [];
+    }
+    userLikes[loggedUser].dislikes.push(likedUsername);
+  }
+  try {
+    fs.writeFileSync(usersLikesFilesName, JSON.stringify(userLikes));
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Internal Server Error');
+  }
+  res.status(200).send('User\'s like/dislike was saved.');
+
 });
 
 app.post('/getUserDetails', (req, res) => {
