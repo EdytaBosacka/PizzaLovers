@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SideBar from '../components/SideBar';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
 import Fab from '@mui/material/Fab';
 import Box from '@mui/material/Box';
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
@@ -17,6 +19,7 @@ function MainPage() {
     const [usersList, setUsersList] = useState<{ 0: String, 1: { name: String, dateOfBirth: string, gender: String, localization: String } }[]>([]);
     const [userPhotos, setUserPhotos] = useState([]);
     const [currentPhoto, setCurrentPhoto] = useState(0);
+    const [dialogOpened, setDialogOpened] = useState(false);
 
     const swiperButtonStyle = {
         color: "#e9692c", background: "white", boxShadow: 0,
@@ -62,6 +65,10 @@ function MainPage() {
         API.saveUserLike(usersList[0][0], true).then((response) => {
             usersList.shift();
             setUsersList([...usersList]);
+            if (response.data.match) {
+                setDialogOpened(true);
+            }
+            console.log(response.data.match);
         }).catch(function (error) { });
     }
 
@@ -105,6 +112,13 @@ function MainPage() {
     return (
         <div className="MainPage">
             <SideBar />
+            <div className= "itsaMatchDialog">
+            <Dialog open={dialogOpened} className="itsaMatchDialog">
+             <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Dancing+Script"/> 
+             <DialogTitle style={{ backgroundColor: '#ffac45', color: 'white', fontFamily: 'Dancing Script', fontSize: '48px'}}>It's a Match!</DialogTitle>
+              You and XDDDD liked each other.
+            </Dialog>
+            </div>
             {!isUsersListEmpty() &&
                 <div className="usersSwiper">
                     <div className="userPhoto">

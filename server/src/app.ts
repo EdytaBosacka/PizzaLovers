@@ -143,12 +143,17 @@ app.post('/saveUserLike', (req, res) => {
   if (!userLikes[loggedUser]) {
     userLikes[loggedUser] = {};
   }
-
+  let response: { match: boolean } = { match: false};
   if (isLike) {
     if (!userLikes[loggedUser].likes) {
       userLikes[loggedUser].likes = [];
     }
     userLikes[loggedUser].likes.push(likedUsername);
+    if(userLikes[likedUsername]?.likes) {
+      if (userLikes[likedUsername].likes.includes(loggedUser)) {
+          response.match = true;
+      }
+    }
   } else {
     if (!userLikes[loggedUser].dislikes) {
       userLikes[loggedUser].dislikes = [];
@@ -161,7 +166,7 @@ app.post('/saveUserLike', (req, res) => {
     console.log(err);
     res.status(500).send('Internal Server Error');
   }
-  res.status(200).send('User\'s like/dislike was saved.');
+  res.status(200).send(response);
 
 });
 
