@@ -1,1 +1,1 @@
-{}
+{"Dog":{"likes":["Magda","Agata","Zuzanna","Edyta","Kinga","Zbyszek","Damian","Piotr"]},"Piotr":{"likes":["Magda","Agata","Zuzanna","Edyta","Kinga","Zbyszek","Damian","Dog"]},"Damian":{"dislikes":["Magda"],"likes":["Agata","Zuzanna","Edyta","Kinga","Zbyszek","Piotr"]},"Zbyszek":{"likes":["Magda","Agata","Zuzanna","Edyta","Kinga","Damian","Piotr","Piotr","Dog"]},"Kinga":{"likes":["Magda","Agata","Zuzanna","Edyta","Zbyszek","Damian","Dog"],"dislikes":["Piotr"]}}

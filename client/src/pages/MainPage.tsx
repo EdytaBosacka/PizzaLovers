@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import SideBar from '../components/SideBar';
+import Box from '@mui/material/Box';
+import Button from '../../node_modules/@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Fab from '@mui/material/Fab';
-import Box from '@mui/material/Box';
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import CloseIcon from '@mui/icons-material/Close';
@@ -18,6 +20,7 @@ import * as API from '../services/http/UserServices';
 function MainPage() {
     const [usersList, setUsersList] = useState<{ 0: String, 1: { name: String, dateOfBirth: string, gender: String, localization: String } }[]>([]);
     const [userPhotos, setUserPhotos] = useState([]);
+    const [loggedUserPhotos, setLoggedUserPhotos] = useState([]);
     const [currentPhoto, setCurrentPhoto] = useState(0);
     const [dialogOpened, setDialogOpened] = useState(false);
 
@@ -43,6 +46,11 @@ function MainPage() {
         "&:disabled .unmatch":
             { color: "gray" },
     }
+    const continueButtonStyle = {
+        marginTop: '20px', color: "#e9692c", background: "white", border: "1px solid #c6531e", opacity: '0.95',
+        "&:hover":
+            { border: "1px solid #c6531e", color: '#c6531e', backgroundColor: '#ffe593' }
+    }
 
     const getUsers = async () => {
         await API.getUsers().then((response) => {
@@ -60,13 +68,20 @@ function MainPage() {
                 }).catch(function (error) { });
         }
     }
+    const getLoggedUserPhotos = () => {
+        API.getImages(localStorage.getItem('login'))
+            .then((response) => {
+                setLoggedUserPhotos(response.data);
+            }).catch(function (error) { });
+    }
 
     const likeAction = () => {
         API.saveUserLike(usersList[0][0], true).then((response) => {
-            usersList.shift();
-            setUsersList([...usersList]);
             if (response.data.match) {
                 setDialogOpened(true);
+            } else {
+                usersList.shift();
+                setUsersList([...usersList]);
             }
             console.log(response.data.match);
         }).catch(function (error) { });
@@ -77,6 +92,12 @@ function MainPage() {
             usersList.shift();
             setUsersList([...usersList]);
         }).catch(function (error) { });
+    }
+
+    const continueAction = () => {
+        setDialogOpened(false);
+        usersList.shift();
+        setUsersList([...usersList]);
     }
 
     const calculateUserAge = (): Number => {
@@ -99,10 +120,9 @@ function MainPage() {
         return usersList.length == 0;
     }
 
-
-
     useEffect(() => {
         getUsers();
+        getLoggedUserPhotos();
     }, []);
 
     useEffect(() => {
@@ -112,13 +132,29 @@ function MainPage() {
     return (
         <div className="MainPage">
             <SideBar />
-            <div className= "itsaMatchDialog">
-            <Dialog open={dialogOpened} className="itsaMatchDialog">
-             <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Dancing+Script"/> 
-             <DialogTitle style={{ backgroundColor: '#ffac45', color: 'white', fontFamily: 'Dancing Script', fontSize: '48px'}}>It's a Match!</DialogTitle>
-              You and XDDDD liked each other.
+            <Dialog open={dialogOpened} style={{ opacity: '0.95' }}>
+                <DialogTitle style={{
+                    backgroundColor: '#ffac45', color: 'white', fontFamily: 'Dancing Script',
+                    fontSize: '48px', textAlign: 'center'
+                }}>
+                    It's a Match!
+                </DialogTitle>
+                <DialogContent style={{
+                    backgroundColor: '#ffac45', color: 'white', fontFamily: 'Century Gothic',
+                    fontWeight: 'lighter', fontSize: '18px'
+                }}>
+                    <div className='itsaMatchContent'>
+                        You and {!!usersList[0] ? usersList[0][1].name : ''} have liked each other!
+                        <div>
+                            <img src={loggedUserPhotos[0]} className="roundPhoto"></img>
+                            <img src={userPhotos[currentPhoto]} className="roundPhoto"></img>
+                        </div>
+                        Now you can send {!!usersList[0] ?  (usersList[0][1].gender == 'female' ? 'her' : (usersList[0][1].gender == 'male' ? 'him' : 'them')) : ''} a message.
+                        <Button variant='outlined' onClick={continueAction} sx={continueButtonStyle}>Continue</Button>
+                    </div>
+
+                </DialogContent>
             </Dialog>
-            </div>
             {!isUsersListEmpty() &&
                 <div className="usersSwiper">
                     <div className="userPhoto">

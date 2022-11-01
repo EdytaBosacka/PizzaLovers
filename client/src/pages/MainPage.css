@@ -30,6 +30,17 @@
     margin-right: 5px;
 }
 
+.roundPhoto {
+    border: 2px solid #c6531e;
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .photoContainer {
     position: relative;
     align-items: center;
@@ -67,8 +78,10 @@
     text-shadow: 2px 2px rgba(0, 0, 0, 0.1);
 }
 
-.itsaMatchDialog {
-    background-color: '#ffac45';
-     color:'white';
-
+.itsaMatchContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
 }
