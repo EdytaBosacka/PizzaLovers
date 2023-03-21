@@ -1,0 +1,26 @@
+.workAndEducationSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left;
+    margin-left: 70px;
+    max-width: fit-content;
+}
+
+.workAndEducationInformation {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 75px; 
+    margin-top: 30px;
+    border: none;
+}
+
+.sectionTitle {
+    text-align: left;
+    padding: 0px;
+}
+
+.singleSection {
+    width: 19vw;
+}
