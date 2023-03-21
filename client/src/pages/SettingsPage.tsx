@@ -8,6 +8,7 @@ import SideBar from '../components/SideBar';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import UserInformationSection from '../components/UserInformationSection';
+import WorkAndEducationSection from '../components/WorkAndEducationSection';
 
 import * as API from '../services/http/UserServices';
 import './SettingsPage.css';
@@ -78,6 +79,9 @@ function SettingsPage() {
                 <div>
                     {tabValue === 0 && (
                         <UserInformationSection />
+                    )}
+                    {tabValue === 1 && (
+                        <WorkAndEducationSection />
                     )}
                 </div>
 

@@ -11,7 +11,7 @@ import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutl
 import CloseIcon from '@mui/icons-material/Close';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
+import DefaultUserPhoto from '../images/DefaultUserPhoto.jpg';
 import './MainPage.css';
 
 import * as Constants from '../shared/constants/Constants';
@@ -19,7 +19,7 @@ import * as API from '../services/http/UserServices';
 
 function MainPage() {
     const [usersList, setUsersList] = useState<{ 0: String, 1: { name: String, dateOfBirth: string, gender: String, localization: String } }[]>([]);
-    const [userPhotos, setUserPhotos] = useState([]);
+    const [userPhotos, setUserPhotos] = useState<string []>([]);
     const [loggedUserPhotos, setLoggedUserPhotos] = useState([]);
     const [currentPhoto, setCurrentPhoto] = useState(0);
     const [dialogOpened, setDialogOpened] = useState(false);
@@ -64,7 +64,12 @@ function MainPage() {
             API.getImages(usersList[0][0])
                 .then((response) => {
                     console.log(response.data);
-                    setUserPhotos(response.data);
+                    if (!response.data) {
+                        setUserPhotos([DefaultUserPhoto]);
+                    } else {
+                        setUserPhotos(response.data);
+                    }
+
                 }).catch(function (error) { });
         }
     }
@@ -82,6 +87,7 @@ function MainPage() {
             } else {
                 usersList.shift();
                 setUsersList([...usersList]);
+                setCurrentPhoto(0);
             }
             console.log(response.data.match);
         }).catch(function (error) { });
@@ -91,6 +97,7 @@ function MainPage() {
         API.saveUserLike(usersList[0][0], false).then((response) => {
             usersList.shift();
             setUsersList([...usersList]);
+            setCurrentPhoto(0);
         }).catch(function (error) { });
     }
 
@@ -98,6 +105,7 @@ function MainPage() {
         setDialogOpened(false);
         usersList.shift();
         setUsersList([...usersList]);
+        setCurrentPhoto(0);
     }
 
     const calculateUserAge = (): Number => {
@@ -149,7 +157,7 @@ function MainPage() {
                             <img src={loggedUserPhotos[0]} className="roundPhoto"></img>
                             <img src={userPhotos[currentPhoto]} className="roundPhoto"></img>
                         </div>
-                        Now you can send {!!usersList[0] ?  (usersList[0][1].gender == 'female' ? 'her' : (usersList[0][1].gender == 'male' ? 'him' : 'them')) : ''} a message.
+                        Now you can send {!!usersList[0] ? (usersList[0][1].gender == 'female' ? 'her' : (usersList[0][1].gender == 'male' ? 'him' : 'them')) : ''} a message.
                         <Button variant='outlined' onClick={continueAction} sx={continueButtonStyle}>Continue</Button>
                     </div>
 

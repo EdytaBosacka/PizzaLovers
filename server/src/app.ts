@@ -135,6 +135,21 @@ app.post('/saveUserContactInformation', (req, res) => {
   res.status(200).send('User contact information was succesfully changed.');
 });
 
+app.post('/saveUserWorkAndEducation', (req,res) => {
+  const username = req.body.login;
+  const userWorkAndEducationInfo = req.body.userData;
+  try {
+    userInfo[username].workPlace = userWorkAndEducationInfo.workPlace;
+    userInfo[username].occupation = userWorkAndEducationInfo.occupation;
+    userInfo[username].university = userWorkAndEducationInfo.university;
+    fs.writeFileSync(usersDetailsFileName, JSON.stringify(userInfo));
+  }
+  catch (err) {
+    console.log(err);
+  }
+  res.status(200).send('User work and education information was succesfully changed.');
+});
+
 app.post('/saveUserLike', (req, res) => {
   const loggedUser = req.body.login;
   const likedUsername = req.body.likedUsername;

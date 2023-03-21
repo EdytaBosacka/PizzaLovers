@@ -72,6 +72,7 @@ function UserInformationSection() {
         }).catch(function (error) { });
     }
 
+    
     const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNameValue(event.target.value);
         if (event.target.value.match(/^[A-Za-z]+$/i)) {

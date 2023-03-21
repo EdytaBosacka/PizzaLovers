@@ -39,6 +39,13 @@ export const saveUserContactInformation = (userData: { phoneNumber: String, emai
     });
 }
 
+export const saveUserWorkAndEducation = (userData: { workPlace: String, occupation: String, university: String}) => {
+    return Axios.post('http://localhost:3001/saveUserWorkAndEducation', {
+        login: localStorage.getItem('login'),
+        userData: userData
+    });
+}
+
 export const saveUserLike = (likedUsername: String, isLike: boolean) => {
     return Axios.post('http://localhost:3001/saveUserLike', {
         login: localStorage.getItem('login'),
