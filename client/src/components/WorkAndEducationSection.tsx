@@ -7,8 +7,9 @@ import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import SchoolIcon from '@mui/icons-material/School';
-
+import Autocomplete from '@mui/material/Autocomplete';
 import * as API from '../services/http/UserServices';
+import * as ExternalAPI from '../services/http/ExternalServices';
 import './WorkAndEducationSection.css';
 
 
@@ -17,23 +18,35 @@ function WorkAndEducationSection() {
     const [workPlace, setWorkPlace] = useState('');
     const [occupation, setOccupation] = useState('');
     const [university, setUniversity] = useState('');
+    const [languagesList, setLanguagesList] = useState([]);
     const [saveWorkAndEducationStatus, setWorkAndEducationStatus] = useState(0);
 
-    const onChangeWorkPlace = (event: React.ChangeEvent<HTMLInputElement>) => { 
+    const onChangeWorkPlace = (event: React.ChangeEvent<HTMLInputElement>) => {
         setWorkPlace(event.target.value);
     }
-    const onChangeOccupation = (event: React.ChangeEvent<HTMLInputElement>) => { 
+    const onChangeOccupation = (event: React.ChangeEvent<HTMLInputElement>) => {
         setOccupation(event.target.value);
     }
-    const onChangeUniversity = (event: React.ChangeEvent<HTMLInputElement>) => { 
+    const onChangeUniversity = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUniversity(event.target.value);
+    }
+
+    const getLanguages = () => {
+        ExternalAPI.getListOfLanguages()
+            .then((response) => {
+                setLanguagesList(response.data);
+            })
     }
     const saveUserWorkAndEducation = () => {
         API.saveUserWorkAndEducation({ workPlace: workPlace, occupation: occupation, university: university })
-        .then((response) => {
-            setWorkAndEducationStatus(response.status);
-        }).catch(function (error) { });
+            .then((response) => {
+                setWorkAndEducationStatus(response.status);
+            }).catch(function (error) { });
     }
+
+    useEffect(() => {
+        getLanguages();
+    }, []);
 
 
     return (
@@ -76,9 +89,26 @@ function WorkAndEducationSection() {
                         }}
                         margin="normal" size="small" autoComplete="off" onChange={onChangeUniversity} sx={{ width: '100%' }} />
                 </div>
+                <Divider orientation="vertical" flexItem />
+                <div className="singleSection">
+                    <h3 className="sectionTitle">Languages</h3>
+                    <Autocomplete
+                        multiple
+                        id="tags-standard"
+                        options={languagesList}
+                        getOptionLabel={(option: any) => option.name}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="standard"
+                                placeholder="Languages"
+                            />
+                        )}
+                    />
+                </div>
             </div>
             <div>
-                <Button variant="outlined" startIcon={<SaveAsOutlinedIcon />} type="submit" sx={{ marginTop: '50px', width: '20%'}}>Save</Button>
+                <Button variant="outlined" startIcon={<SaveAsOutlinedIcon />} type="submit" sx={{ marginTop: '50px', width: '20%' }}>Save</Button>
             </div>
         </div>
     );
