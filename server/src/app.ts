@@ -142,6 +142,7 @@ app.post('/saveUserWorkAndEducation', (req,res) => {
     userInfo[username].workPlace = userWorkAndEducationInfo.workPlace;
     userInfo[username].occupation = userWorkAndEducationInfo.occupation;
     userInfo[username].university = userWorkAndEducationInfo.university;
+    userInfo[username].languages = userWorkAndEducationInfo.languages;
     fs.writeFileSync(usersDetailsFileName, JSON.stringify(userInfo));
   }
   catch (err) {

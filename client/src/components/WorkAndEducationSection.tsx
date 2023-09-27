@@ -16,9 +16,14 @@ import './WorkAndEducationSection.css';
 function WorkAndEducationSection() {
 
     const [workPlace, setWorkPlace] = useState('');
+    const oldWorkPlace = useRef('');
     const [occupation, setOccupation] = useState('');
+    const oldOccupation = useRef('');
     const [university, setUniversity] = useState('');
-    const [languagesList, setLanguagesList] = useState([]);
+    const oldUniversity = useRef('');
+    const [languagesList, setLanguagesList] = useState([] as string[]);
+    const [selectedLanguages, setSelectedLanguages] = useState([] as string[]);
+    const oldSelectedLanguages = useRef([] as { code: string, name: string, targets: string[] }[]);
     const [saveWorkAndEducationStatus, setWorkAndEducationStatus] = useState(0);
 
     const onChangeWorkPlace = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,11 +39,28 @@ function WorkAndEducationSection() {
     const getLanguages = () => {
         ExternalAPI.getListOfLanguages()
             .then((response) => {
-                setLanguagesList(response.data);
+                let languages = (response.data as any[]).map(language => language.name);
+                setLanguagesList(languages);
             })
     }
+
+    const getUserWorkEducationDetails = () => {
+        API.getUserDetails().then(response => {
+            if (response.data) {
+                oldWorkPlace.current = response.data.workPlace;
+                oldOccupation.current = response.data.occupation;
+                oldUniversity.current = response.data.university;
+                oldSelectedLanguages.current = response.data.languages;
+
+                setWorkPlace(response.data.workPlace);
+                setOccupation(response.data.occupation);
+                setUniversity(response.data.university);
+                setSelectedLanguages(response.data.languages);
+            }
+        }).catch(function (error) { });
+    }
     const saveUserWorkAndEducation = () => {
-        API.saveUserWorkAndEducation({ workPlace: workPlace, occupation: occupation, university: university })
+        API.saveUserWorkAndEducation({ workPlace: workPlace, occupation: occupation, university: university, languages: selectedLanguages })
             .then((response) => {
                 setWorkAndEducationStatus(response.status);
             }).catch(function (error) { });
@@ -46,6 +68,7 @@ function WorkAndEducationSection() {
 
     useEffect(() => {
         getLanguages();
+        getUserWorkEducationDetails();
     }, []);
 
 
@@ -56,6 +79,7 @@ function WorkAndEducationSection() {
                     <h3 className="sectionTitle">Work</h3>
                     <TextField
                         label="Work Place"
+                        value={workPlace}
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
@@ -66,6 +90,7 @@ function WorkAndEducationSection() {
                         margin="normal" size="small" autoComplete="off" onChange={onChangeWorkPlace} sx={{ width: '100%' }} />
                     <TextField
                         label="Occupation"
+                        value={occupation}
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
@@ -80,6 +105,7 @@ function WorkAndEducationSection() {
                     <h3 className="sectionTitle">Education</h3>
                     <TextField
                         label="University"
+                        value={university}
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
@@ -95,8 +121,9 @@ function WorkAndEducationSection() {
                     <Autocomplete
                         multiple
                         id="tags-standard"
+                        value={selectedLanguages}
                         options={languagesList}
-                        getOptionLabel={(option: any) => option.name}
+                        onChange={(event, value) => setSelectedLanguages(value)}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -108,7 +135,7 @@ function WorkAndEducationSection() {
                 </div>
             </div>
             <div>
-                <Button variant="outlined" startIcon={<SaveAsOutlinedIcon />} type="submit" sx={{ marginTop: '50px', width: '20%' }}>Save</Button>
+                <Button variant="outlined" startIcon={<SaveAsOutlinedIcon />} onClick={saveUserWorkAndEducation} type="submit" sx={{ marginTop: '50px', width: '20%' }}>Save</Button>
             </div>
         </div>
     );

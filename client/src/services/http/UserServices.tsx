@@ -39,7 +39,7 @@ export const saveUserContactInformation = (userData: { phoneNumber: String, emai
     });
 }
 
-export const saveUserWorkAndEducation = (userData: { workPlace: String, occupation: String, university: String}) => {
+export const saveUserWorkAndEducation = (userData: { workPlace: String, occupation: String, university: String, languages: String[]}) => {
     return Axios.post('http://localhost:3001/saveUserWorkAndEducation', {
         login: localStorage.getItem('login'),
         userData: userData
